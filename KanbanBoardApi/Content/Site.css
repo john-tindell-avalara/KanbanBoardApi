@@ -22,7 +22,6 @@ html, body, #fullheight {
     min-height: 400px !important;
     height: 100%;
     display: block;
-    border: solid 1px   blue;
 }
 
 .task {
@@ -76,5 +75,12 @@ html, body, #fullheight {
     .columns {
         width: 100%;
         white-space: nowrap;
-        border: solid 1px red; display: block; overflow-y: visible;
+    }
+
+    .column-menu {
+        display: none;
+    }
+
+    .column:hover .column-menu {
+        display: block;
     }

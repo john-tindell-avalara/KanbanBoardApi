@@ -18,7 +18,8 @@ module KanbanBoardApp {
         currentBoard: any;
 
         columnForm: any;
-        createColumn();
+        createColumn(): void;
+        deleteColumn(column:any):void;
     }
 
     export class BoardController {
@@ -134,6 +135,15 @@ module KanbanBoardApp {
                     }
                 });
             };
+
+            scope.deleteColumn = (column: any) => {
+                this.http.delete("/boards/" + this.scope.currentBoard.Slug + "/columns/" + column.Slug).success((response: any) => {
+                    var index = this.scope.columns.indexOf(column);
+                    if (index > -1) {
+                        this.scope.columns.splice(index, 1);
+                    }
+                });
+            }
 
             scope.onDragComplete = (data, event, columnSlug) => {
                 data.BoardColumnSlug = columnSlug;

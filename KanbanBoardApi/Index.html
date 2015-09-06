@@ -11,19 +11,16 @@
     <div ng-app="KanbanBoardApp" class="" style="height: 100%; width: 100%;" ng-controller="BoardController" ng-cloak>
         <header class="navbar navbar-static-top bs-docs-nav">
             <div>
-                <ul class="nav nav-pills" ng-repeat="board in boards">
-                    <li role="presentation" ng-class="currentBoard == board ? 'active' : ''"><a ng-click="loadBoard(board)">{{ board.Name }}</a></li>
+                <ul class="nav nav-pills" >
+                    <li ng-repeat="board in boards" role="presentation" ng-class="currentBoard == board ? 'active' : ''"><a ng-click="loadBoard(board)">{{ board.Name }}</a></li>
+
+                    <li>
+                        <a class="btn btn-default" ng-click="createColumn()"><span class="glyphicon glyphicon-plus"></span> Add New Column</a>
+                    </li>
+                    <li ng-show="columns[0]">
+                        <a class="btn btn-default" ng-click="createTask(columns[0].Slug)"><span class="glyphicon glyphicon-plus"></span> Add New Task</a>
+                    </li>
                 </ul>
-                <nav ng-show="currentBoard">
-                    <ul class="nav nav-pills">
-                        <li>
-                            <a class="btn btn-default" ng-click="createColumn()"><span class="glyphicon glyphicon-plus"></span> Add New Column</a>
-                        </li>
-                        <li ng-show="columns[0]">
-                            <a class="btn btn-default" ng-click="createTask(columns[0].Slug)"><span class="glyphicon glyphicon-plus"></span> Add New Task</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </header>
         <div class="columns">
@@ -31,8 +28,12 @@
                 <div>
                     <h2>
                         {{ column.Name }}
+
+                        <div class="column-menu pull-right">
+                            <a ng-show="!(tasks | filter: { BoardColumnSlug: column.Slug}:true).length" ng-click="deleteColumn(column)" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                        </div>
                     </h2>
-                    <div ng-repeat="task in tasks | filter: { BoardColumnSlug: column.Slug}">
+                    <div ng-repeat="task in tasks | filter: { BoardColumnSlug: column.Slug}:true">
                         <div ng-drag="true" ng-drag-data="task" data-allow-transform="true" class="task">
                             {{ task.Id }} - {{ task.Name }}
                             <div class="pull-right">
