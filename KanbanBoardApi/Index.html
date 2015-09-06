@@ -11,18 +11,21 @@
     <div ng-app="KanbanBoardApp" class="" style="height: 100%; width: 100%;" ng-controller="BoardController" ng-cloak>
         <header class="navbar navbar-static-top bs-docs-nav">
             <div>
-                <ul class="nav nav-pills" >
+                <ul class="nav nav-pills">
                     <li ng-repeat="board in boards" role="presentation" ng-class="currentBoard == board ? 'active' : ''"><a ng-click="loadBoard(board)">{{ board.Name }}</a></li>
-
                     <li>
-                        <a class="btn btn-default" ng-click="createColumn()"><span class="glyphicon glyphicon-plus"></span> Add New Column</a>
+                        <a class="btn btn-default" ng-click="createBoard()"><span class="glyphicon glyphicon-plus"></span> Board</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default" ng-click="createColumn()"><span class="glyphicon glyphicon-plus"></span> Column</a>
                     </li>
                     <li ng-show="columns[0]">
-                        <a class="btn btn-default" ng-click="createTask(columns[0].Slug)"><span class="glyphicon glyphicon-plus"></span> Add New Task</a>
+                        <a class="btn btn-default" ng-click="createTask(columns[0].Slug)"><span class="glyphicon glyphicon-plus"></span> Task</a>
                     </li>
                 </ul>
             </div>
         </header>
+
         <div class="columns">
             <div ng-repeat="column in columns" class="col-md-4 column" ng-drop="true" ng-drop-success="onDragComplete($data,$event,column.Slug)">
                 <div>
@@ -45,6 +48,29 @@
                 </div>
             </div>
         </div>
+
+        <script type="text/ng-template" id="AddBoardModal.html">
+            <form ng-submit="save()" name="boardForm" novalidate>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create New Board</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" ng-class="{ 'has-error': boardForm.name.$invalid && boardForm.name.$dirty }">
+                            <input type="text" class="form-control" name="name" placeholder="Board Name" ng-model="name" required />
+                        </div>
+                        <div ng-show="errorMessage" class="form-group has-error">
+                            <p class="help-block">{{ errorMessage }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="columnForm.$invalid">Create</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
 
         <script type="text/ng-template" id="AddColumnModal.html">
             <form ng-submit="save()" name="columnForm" novalidate>

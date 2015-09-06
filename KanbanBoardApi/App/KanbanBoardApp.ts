@@ -20,6 +20,7 @@ module KanbanBoardApp {
         columnForm: any;
         createColumn(): void;
         deleteColumn(column:any):void;
+        createBoard: () => void;
     }
 
     export class BoardController {
@@ -31,6 +32,10 @@ module KanbanBoardApp {
                 this.scope.boards = response.Items;
 
                 this.scope.loadBoard(this.scope.boards[0]);
+            });
+
+            scope.$on('BoardCreated', (event, args) => {
+                this.scope.boards.push(args);
             });
 
             scope.$on('newColumnCreated', (event, args) => {
@@ -61,18 +66,16 @@ module KanbanBoardApp {
                 });
             };
 
-            scope.createTask = (columnSlug: string) => {
-                /*
-                var task = {
-                    Name: "New Task",
-                    BoardColumnSlug: columnSlug
-                };
-
-                this.http.post("/boards/" + this.scope.currentBoard.Slug + "/tasks", task).success((response: any) => {
-                    // do something
-                    this.scope.tasks.push(response);
+            scope.createBoard = () => {
+                modal.open({
+                    animation: true,
+                    templateUrl: 'AddBoardModal.html',
+                    controller: 'AddBoardController',
+                    scope: this.scope
                 });
-                */
+            };
+
+            scope.createTask = (columnSlug: string) => {
                 modal.open({
                     animation: true,
                     templateUrl: 'AddTaskModal.html',
@@ -246,8 +249,38 @@ module KanbanBoardApp {
         }
     }
 
+    export interface IAddBoardScope extends IModalScope {
+        boardForm;
+    }
+
+    export class AddBoardController {
+        constructor(private scope: IAddBoardScope, private http: ng.IHttpService, private modalInstance: angular.ui.bootstrap.IModalServiceInstance) {
+            scope.save = () => {
+                if (this.scope.boardForm.$valid) {
+
+                    var board = {
+                        Name: this.scope.boardForm.name.$viewValue
+                    };
+                    this.http.post("/boards", board).success((response: any) => {
+                        this.scope.$emit('BoardCreated', response);
+                        modalInstance.dismiss(null);
+                    }).error((error: any, status: number) => {
+                        scope.errorMessage = "Unknown error has occured";
+                        this.scope.boardForm.name.$invalid = true;
+                    });
+                }
+            }
+
+            scope.cancel = () => {
+                modalInstance.dismiss('cancel');
+            };
+        }
+    }
+
+
     var app = angular.module('KanbanBoardApp', ['ngDraggable', 'ui.bootstrap']);
     app.controller("BoardController", ['$scope', '$http', '$modal', BoardController]);
+    app.controller("AddBoardController", ['$scope', '$http', '$modalInstance', AddBoardController]);
     app.controller("AddColumnController", ['$scope', '$http', '$modalInstance', 'currentBoard', AddColumnController]);
     app.controller("AddTaskController", ['$scope', '$http', '$modalInstance', 'currentBoard', 'columnSlug', AddTaskController]);
     app.controller("UpdateTaskController", ['$scope', '$http', '$modalInstance', 'currentBoard', 'currentTask', UpdateTaskController]);
