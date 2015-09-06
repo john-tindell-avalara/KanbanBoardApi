@@ -112,6 +112,9 @@ module KanbanBoardApp {
                         currentBoard: () => {
                             return this.scope.currentBoard;
                         },
+                        columns: () => {
+                            return this.scope.columns;
+                        },
                         currentTask: () => {
                             return newTask;
                         }
@@ -166,15 +169,18 @@ module KanbanBoardApp {
     export interface IUpdateTaskScope extends IModalScope {
         taskForm: any;
         currentTask: any;
+        columns: any;
     }
 
     export class UpdateTaskController {
-        constructor(private scope: IUpdateTaskScope, private http: ng.IHttpService, private modalInstance: angular.ui.bootstrap.IModalServiceInstance, private currentBoard: any, private currentTask: any) {
+        constructor(private scope: IUpdateTaskScope, private http: ng.IHttpService, private modalInstance: angular.ui.bootstrap.IModalServiceInstance, private currentBoard: any, private columns: any, private currentTask: any) {
             this.scope.currentTask = currentTask;
+            this.scope.columns = columns;
             scope.save = () => {
                 if (this.scope.taskForm.$valid) {
-
                     this.currentTask.Name = this.scope.taskForm.name.$viewValue;
+                    console.log(this.scope.taskForm.columnSlug);
+                    this.currentTask.BoardColumnSlug = this.scope.taskForm.columnSlug.$viewValue;
                     this.http.put("/boards/" + this.currentBoard.Slug + "/tasks/" + this.currentTask.Id, this.currentTask).success((response: any) => {
                         this.scope.$emit('TaskUpdated', response);
                         modalInstance.dismiss(null);
@@ -283,5 +289,5 @@ module KanbanBoardApp {
     app.controller("AddBoardController", ['$scope', '$http', '$modalInstance', AddBoardController]);
     app.controller("AddColumnController", ['$scope', '$http', '$modalInstance', 'currentBoard', AddColumnController]);
     app.controller("AddTaskController", ['$scope', '$http', '$modalInstance', 'currentBoard', 'columnSlug', AddTaskController]);
-    app.controller("UpdateTaskController", ['$scope', '$http', '$modalInstance', 'currentBoard', 'currentTask', UpdateTaskController]);
+    app.controller("UpdateTaskController", ['$scope', '$http', '$modalInstance', 'currentBoard', 'columns', 'currentTask', UpdateTaskController]);
 }

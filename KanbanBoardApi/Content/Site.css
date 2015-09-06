@@ -72,15 +72,19 @@ html, body, #fullheight {
         display: inline-block;
     }
 
-    .columns {
-        width: 100%;
-        white-space: nowrap;
-    }
+.columns {
+    width: 100%;
+    white-space: nowrap;
+}
 
-    .column-menu {
-        display: none;
-    }
+.column-menu, .task-menu {
+    display: none;
+}
 
-    .column:hover .column-menu {
-        display: block;
-    }
+.column:hover .column-menu {
+    display: block;
+}
+
+.task:hover .task-menu {
+    display: block;
+}

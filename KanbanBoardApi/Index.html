@@ -33,16 +33,19 @@
                         {{ column.Name }}
 
                         <div class="column-menu pull-right">
+                            <a ng-click="ediColumn(task)" class="btn btn-default"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
                             <a ng-show="!(tasks | filter: { BoardColumnSlug: column.Slug}:true).length" ng-click="deleteColumn(column)" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                         </div>
                     </h2>
                     <div ng-repeat="task in tasks | filter: { BoardColumnSlug: column.Slug}:true">
                         <div ng-drag="true" ng-drag-data="task" data-allow-transform="true" class="task">
-                            {{ task.Id }} - {{ task.Name }}
-                            <div class="pull-right">
-                                <a ng-click="editTask(task)" class="btn btn-default" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
-                                <a ng-click="deleteTask(task)" ng-show="column.Slug == columns[columns.length -1].Slug" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-                            </div>
+                            <h3>
+                                {{ task.Id }} - {{ task.Name }}
+                                <div class="task-menu pull-right">
+                                    <a ng-click="editTask(task)" class="btn btn-default"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                    <a ng-click="deleteTask(task)" ng-show="column.Slug == columns[columns.length -1].Slug" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                                </div>
+                            </h3>
                         </div>
                     </div>
                 </div>
@@ -70,7 +73,6 @@
                 </div>
             </form>
         </script>
-
 
         <script type="text/ng-template" id="AddColumnModal.html">
             <form ng-submit="save()" name="columnForm" novalidate>
@@ -129,10 +131,13 @@
                         <div ng-show="errorMessage" class="form-group has-error">
                             <p class="help-block">{{ errorMessage }}</p>
                         </div>
+                        <div class="form-group">
+                            <select name="columnSlug" class="form-control" ng-model="currentTask.BoardColumnSlug" ng-options="column.Slug as column.Name for column in columns"></select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
-                        <button type="submit" class="btn btn-primary" ng-disabled="columnForm.$invalid">Update</button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="taskForm.$invalid">Update</button>
                     </div>
                 </div>
             </form>
