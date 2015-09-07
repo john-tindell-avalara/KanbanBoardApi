@@ -179,6 +179,7 @@ module KanbanBoardApp {
             scope.save = () => {
                 if (this.scope.taskForm.$valid) {
                     this.currentTask.Name = this.scope.taskForm.name.$viewValue;
+                    this.currentTask.Description = this.scope.taskForm.description.$viewValue;
                     console.log(this.scope.taskForm.columnSlug);
                     this.currentTask.BoardColumnSlug = this.scope.taskForm.columnSlug.$viewValue;
                     this.http.put("/boards/" + this.currentBoard.Slug + "/tasks/" + this.currentTask.Id, this.currentTask).success((response: any) => {
@@ -208,6 +209,7 @@ module KanbanBoardApp {
 
                     var task = {
                         Name: this.scope.taskForm.name.$viewValue,
+                        Description: this.scope.taskForm.description.$viewValue,
                         BoardColumnSlug: this.columnSlug
                     };
                     this.http.post("/boards/" + this.currentBoard.Slug + "/tasks", task).success((response: any) => {
