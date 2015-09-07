@@ -167,7 +167,7 @@ module KanbanBoardApp {
     }
 
     export interface IUpdateTaskScope extends IModalScope {
-        taskForm: any;
+        updateTaskForm: any;
         currentTask: any;
         columns: any;
     }
@@ -177,17 +177,17 @@ module KanbanBoardApp {
             this.scope.currentTask = currentTask;
             this.scope.columns = columns;
             scope.save = () => {
-                if (this.scope.taskForm.$valid) {
-                    this.currentTask.Name = this.scope.taskForm.name.$viewValue;
-                    this.currentTask.Description = this.scope.taskForm.description.$viewValue;
-                    console.log(this.scope.taskForm.columnSlug);
-                    this.currentTask.BoardColumnSlug = this.scope.taskForm.columnSlug.$viewValue;
+                if (this.scope.updateTaskForm.$valid) {
+                    this.currentTask.Name = this.scope.updateTaskForm.name.$viewValue;
+                    this.currentTask.Description = this.scope.updateTaskForm.description.$viewValue;
+                    console.log(this.scope.updateTaskForm.columnSlug);
+                    this.currentTask.BoardColumnSlug = this.scope.updateTaskForm.columnSlug.$viewValue;
                     this.http.put("/boards/" + this.currentBoard.Slug + "/tasks/" + this.currentTask.Id, this.currentTask).success((response: any) => {
                         this.scope.$emit('TaskUpdated', response);
                         modalInstance.dismiss(null);
                     }).error((error: any, status: number) => {
                         scope.errorMessage = "Unknown error has occured";
-                        this.scope.taskForm.name.$invalid = true;
+                        this.scope.updateTaskForm.name.$invalid = true;
                     });
                 }
             }
@@ -199,17 +199,17 @@ module KanbanBoardApp {
     }
 
     export interface IAddTaskScope extends IModalScope {
-        taskForm;
+        addTaskForm;
     }
 
     export class AddTaskController {
         constructor(private scope: IAddTaskScope, private http: ng.IHttpService, private modalInstance: angular.ui.bootstrap.IModalServiceInstance, private currentBoard: any, private columnSlug: string) {
             scope.save = () => {
-                if (this.scope.taskForm.$valid) {
+                if (this.scope.addTaskForm.$valid) {
 
                     var task = {
-                        Name: this.scope.taskForm.name.$viewValue,
-                        Description: this.scope.taskForm.description.$viewValue,
+                        Name: this.scope.addTaskForm.name.$viewValue,
+                        Description: this.scope.addTaskForm.description.$viewValue,
                         BoardColumnSlug: this.columnSlug
                     };
                     this.http.post("/boards/" + this.currentBoard.Slug + "/tasks", task).success((response: any) => {
@@ -217,7 +217,7 @@ module KanbanBoardApp {
                         modalInstance.dismiss(null);
                     }).error((error: any, status: number) => {
                         scope.errorMessage = "Unknown error has occured";
-                        this.scope.taskForm.name.$invalid = true;
+                        this.scope.addTaskForm.name.$invalid = true;
                     });
                 }
             }
