@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Kanban Board</title>
+    <meta charset="utf-8" />
+    <link href="/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div ng-app="KanbanBoardApp" class="" style="height: 100%; width: 100%;" ng-controller="BoardController" ng-cloak>
+        <header class="navbar navbar-static-top bs-docs-nav">
+            <div>
+                <ul class="nav nav-pills">
+                    <li ng-repeat="board in boards" role="presentation" ng-class="currentBoard == board ? 'active' : ''"><a ng-click="loadBoard(board)">{{ board.Name }}</a></li>
+                    <li>
+                        <a class="btn btn-default" ng-click="createBoard()"><span class="glyphicon glyphicon-plus"></span> Board</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-default" ng-click="createColumn()"><span class="glyphicon glyphicon-plus"></span> Column</a>
+                    </li>
+                    <li ng-show="columns[0]">
+                        <a class="btn btn-default" ng-click="createTask(columns[0].Slug)"><span class="glyphicon glyphicon-plus"></span> Task</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="row columns">
+            <div ng-repeat="column in columns" class="col-xs-4 column" ng-drop="true" ng-drop-success="onDragComplete($data,$event,column.Slug)">
+                <div>
+                    <h2>
+                        {{ column.Name }}
+                        <div class="column-menu pull-right">
+                            <a ng-click="editColumn(column)" class="btn btn-default"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                            <a ng-show="!(tasks | filter: { BoardColumnSlug: column.Slug}:true).length" ng-click="deleteColumn(column)" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                        </div>
+                    </h2>
+                    <div ng-repeat="task in tasks | filter: { BoardColumnSlug: column.Slug}:true">
+                        <div ng-drag="true" ng-drag-data="task" data-allow-transform="true" class="task">
+                            <h3>
+                                {{ task.Id }} - {{ task.Name }}
+                                <div class="task-menu pull-right">
+                                    <a ng-click="editTask(task)" class="btn btn-default"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                    <a ng-click="deleteTask(task)" ng-show="column.Slug == columns[columns.length -1].Slug" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="AddBoardModal.html">
+            <form ng-submit="save()" name="boardForm" novalidate>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create New Board</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" ng-class="{ 'has-error': boardForm.name.$invalid && boardForm.name.$dirty }">
+                            <input type="text" class="form-control" name="name" placeholder="Board Name" ng-model="name" required />
+                        </div>
+                        <div ng-show="errorMessage" class="form-group has-error">
+                            <p class="help-block">{{ errorMessage }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="boardForm.$invalid">Create</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
+        <script type="text/ng-template" id="AddColumnModal.html">
+            <form ng-submit="save()" name="columnForm" novalidate>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create New Column</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" ng-class="{ 'has-error': columnForm.name.$invalid && columnForm.name.$dirty }">
+                            <input type="text" class="form-control" name="name" placeholder="Column Name" ng-model="name" required />
+                        </div>
+                        <div ng-show="errorMessage" class="form-group has-error">
+                            <p class="help-block">{{ errorMessage }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="columnForm.$invalid">Create</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
+        <script type="text/ng-template" id="UpdateColumnModal.html">
+            <form ng-submit="save()" name="updateColumnForm" novalidate>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Update Column</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" ng-class="{ 'has-error': updateColumnForm.name.$invalid && updateColumnForm.name.$dirty }">
+                            <input type="text" class="form-control" name="name" placeholder="Column Name" ng-model="currentColumn.Name" required />
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': updateColumnForm.Order.$invalid && updateColumnForm.Order.$dirty }">
+                            <input type="number" class="form-control" name="order" placeholder="Column Order" ng-model="currentColumn.Order" required />
+                        </div>
+                        <div ng-show="errorMessage" class="form-group has-error">
+                            <p class="help-block">{{ errorMessage }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="updateColumnForm.$invalid">Create</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
+
+        <script type="text/ng-template" id="AddTaskModal.html">
+            <form ng-submit="save()" name="addTaskForm" novalidate>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create New Task</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" ng-class="{ 'has-error': addTaskForm.name.$invalid && (columnTask.name.$dirty || submitted)}">
+                            <input type="text" class="form-control" name="name" placeholder="Task Name" ng-model="name" required />
+                        </div>
+                        <div ng-show="errorMessage" class="form-group has-error">
+                            <p class="help-block">{{ errorMessage }}</p>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': addTaskForm.description.$invalid && columnTask.name.$dirty }">
+                            <textarea type="text" class="form-control" name="description" placeholder="Description" ng-model="description"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="addTaskForm.$invalid">Create</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
+        <script type="text/ng-template" id="UpdateTaskModal.html">
+            <form ng-submit="save()" name="updateTaskForm" novalidate>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Task</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" ng-class="{ 'has-error': updateTaskForm.name.$invalid && columnTask.name.$dirty }">
+                            <input type="text" class="form-control" name="name" placeholder="Task Name" ng-model="currentTask.Name" required />
+                        </div>
+                        <div ng-show="errorMessage" class="form-group has-error">
+                            <p class="help-block">{{ errorMessage }}</p>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-error': updateTaskForm.description.$invalid && columnTask.name.$dirty }">
+                            <textarea type="text" class="form-control" name="description" placeholder="Description" ng-model="currentTask.Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <select name="columnSlug" class="form-control" ng-model="currentTask.BoardColumnSlug" ng-options="column.Slug as column.Name for column in columns"></select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="updateTaskForm.$invalid">Update</button>
+                    </div>
+                </div>
+            </form>
+        </script>
+
+    </div>
+
+    <script src="/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="/Scripts/angular.min.js"></script>
+    <script src="/Scripts/angular-ui/ui-bootstrap.min.js"></script>
+    <script src="/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
+    <script src="/Scripts/ngDraggable.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/bundles/kanbanapp"></script>
+</body>
+</html>
