@@ -1,13 +1,9 @@
-﻿/// <reference path="../scripts/typings/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
-/// <reference path="../scripts/typings/angularjs/angular.d.ts" />
-
-
-module KanbanBoardApp {
+﻿module KanbanBoardApp {
     export class BoardController {
         constructor(private scope: IBoardScope, private http: ng.IHttpService, private modal: angular.ui.bootstrap.IModalService) {
             this.scope.loading = true;
 
-            http.get("/boards").success((response: any) => {
+            http.get("http://localhost:2943/boards").success((response: any) => {
                 this.scope.loading = false;
                 this.scope.boards = response.Items;
 
@@ -46,11 +42,11 @@ module KanbanBoardApp {
 
             scope.loadBoard = (item) => {
                 this.scope.currentBoard = item;
-                this.http.get("/boards/" + item.Slug + "/columns").success((response: any) => {
+                this.http.get("http://localhost:2943/boards/" + item.Slug + "/columns").success((response: any) => {
                     this.scope.columns = response.Items;
                 });
 
-                this.http.get("/boards/" + item.Slug + "/tasks").success((response: any) => {
+                this.http.get("http://localhost:2943/boards/" + item.Slug + "/tasks").success((response: any) => {
                     this.scope.tasks = response.Items;
                 });
             };
@@ -82,7 +78,7 @@ module KanbanBoardApp {
             };
 
             scope.deleteTask = (task: any) => {
-                this.http.delete("/boards/" + this.scope.currentBoard.Slug + "/tasks/" + task.Id).success((response: any) => {
+                this.http.delete("http://localhost:2943/boards/" + this.scope.currentBoard.Slug + "/tasks/" + task.Id).success((response: any) => {
                     var index = this.scope.tasks.indexOf(task);
                     if (index > -1) {
                         this.scope.tasks.splice(index, 1);
@@ -112,7 +108,7 @@ module KanbanBoardApp {
             };
 
             scope.updateTask = (task: any) => {
-                this.http.put("/boards/" + this.scope.currentBoard.Slug + "/tasks/" + task.Id, task).success((response: any) => {
+                this.http.put("http://localhost:2943/boards/" + this.scope.currentBoard.Slug + "/tasks/" + task.Id, task).success((response: any) => {
                     // do something
                 });
             };
@@ -150,7 +146,7 @@ module KanbanBoardApp {
             };
 
             scope.deleteColumn = (column: any) => {
-                this.http.delete("/boards/" + this.scope.currentBoard.Slug + "/columns/" + column.Slug).success((response: any) => {
+                this.http.delete("http://localhost:2943/boards/" + this.scope.currentBoard.Slug + "/columns/" + column.Slug).success((response: any) => {
                     var index = this.scope.columns.indexOf(column);
                     if (index > -1) {
                         this.scope.columns.splice(index, 1);
@@ -160,7 +156,7 @@ module KanbanBoardApp {
 
             scope.onDragComplete = (data, event, columnSlug) => {
                 data.BoardColumnSlug = columnSlug;
-                this.http.put("/boards/" + this.scope.currentBoard.Slug + "/tasks/" + data.Id, data).success((response: any) => {
+                this.http.put("http://localhost:2943/boards/" + this.scope.currentBoard.Slug + "/tasks/" + data.Id, data).success((response: any) => {
                     // do something
                 });
             };

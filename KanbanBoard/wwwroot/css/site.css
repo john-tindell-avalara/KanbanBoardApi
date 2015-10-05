@@ -1,34 +1,90 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿[ng-cloak] {
+    display: none !important;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+* {
+    padding: 0;
+    margin: 0;
 }
 
-/* Set widths on the form inputs since otherwise they're 100% wide */
-input,
-select,
-textarea {
-    max-width: 280px;
+html, body, #fullheight {
+    min-height: 100% !important;
+    height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-/* Carousel */
-.carousel-caption {
-    z-index: 10 !important;
+.column {
+    min-height: 400px !important;
+    height: 100%;
+    display: block;
 }
 
-    .carousel-caption p {
-        font-size: 20px;
-        line-height: 1.4;
+.task {
+    cursor: pointer;
+    border: solid 1px #357ebd;
+    padding: 15px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+[ng-drag].drag-over {
+    background-color: #f0f0f0;
+}
+
+[ng-drag].dragging {
+    opacity: 0.5;
+}
+
+[ng-drop] {
+}
+
+    [ng-drop].drag-enter {
+        background-color: #f0f0f0;
     }
 
-@media (min-width: 768px) {
-    .carousel-caption {
-        z-index: 10 !important;
+    [ng-drop] span.title {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200px;
+        height: 20px;
+        margin-left: -100px;
+        margin-top: -10px;
     }
+
+    [ng-drop] div {
+        position: relative;
+        z-index: 2;
+    }
+
+
+.row-fluid {
+    white-space: nowrap;
+}
+
+    .row-fluid .col-md-4 {
+        display: inline-block;
+    }
+
+.columns {
+    width: 100%;
+    white-space: nowrap;
+}
+
+.column-menu, .task-menu {
+    display: none;
+}
+
+.column:hover .column-menu {
+    display: block;
+}
+
+.task:hover .task-menu {
+    display: block;
 }

@@ -11,7 +11,7 @@ var KanbanBoardApp;
                     var board = {
                         Name: _this.scope.boardForm.name.$viewValue
                     };
-                    _this.http.post("/boards", board).success(function (response) {
+                    _this.http.post("http://localhost:2943/boards", board).success(function (response) {
                         _this.scope.$emit('BoardCreated', response);
                         modalInstance.dismiss(null);
                     }).error(function (error, status) {

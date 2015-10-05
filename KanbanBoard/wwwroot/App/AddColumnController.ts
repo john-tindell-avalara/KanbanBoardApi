@@ -1,10 +1,10 @@
-    module KanbanBoardApp {
+module KanbanBoardApp {
     export class AddColumnController {
         constructor(private scope: IAddColumnScope, private http: ng.IHttpService, private modalInstance: angular.ui.bootstrap.IModalServiceInstance, private currentBoard: any) {
             scope.save = () => {
                 if (this.scope.columnForm.$valid) {
                     var column = { Name: this.scope.columnForm.name.$viewValue };
-                    this.http.post("/boards/" + this.currentBoard.Slug + "/columns", column).success((response: any) => {
+                    this.http.post("http://localhost:2943/boards/" + this.currentBoard.Slug + "/columns", column).success((response: any) => {
                         this.scope.$emit('newColumnCreated', response);
                         modalInstance.dismiss(null);
                     }).error((error: any, status: number) => {

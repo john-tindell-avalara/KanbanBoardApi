@@ -2,6 +2,9 @@
   "name": "ASP.NET",
   "private": true,
   "dependencies": {
+    "angularjs": "*",
+    "angular-bootstrap": "*",
+    "ngDraggable": "*",
     "bootstrap": "3.0.0",
     "bootstrap-touch-carousel": "0.8.0",
     "hammer.js": "2.0.4",

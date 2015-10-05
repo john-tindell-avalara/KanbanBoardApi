@@ -1,5 +1,3 @@
-/// <reference path="../scripts/typings/angular-ui-bootstrap/angular-ui-bootstrap.d.ts" />
-/// <reference path="../scripts/typings/angularjs/angular.d.ts" />
 var KanbanBoardApp;
 (function (KanbanBoardApp) {
     var BoardController = (function () {
@@ -9,7 +7,7 @@ var KanbanBoardApp;
             this.http = http;
             this.modal = modal;
             this.scope.loading = true;
-            http.get("/boards").success(function (response) {
+            http.get("http://localhost:2943/boards").success(function (response) {
                 _this.scope.loading = false;
                 _this.scope.boards = response.Items;
                 _this.scope.loadBoard(_this.scope.boards[0]);
@@ -41,10 +39,10 @@ var KanbanBoardApp;
             });
             scope.loadBoard = function (item) {
                 _this.scope.currentBoard = item;
-                _this.http.get("/boards/" + item.Slug + "/columns").success(function (response) {
+                _this.http.get("http://localhost:2943/boards/" + item.Slug + "/columns").success(function (response) {
                     _this.scope.columns = response.Items;
                 });
-                _this.http.get("/boards/" + item.Slug + "/tasks").success(function (response) {
+                _this.http.get("http://localhost:2943/boards/" + item.Slug + "/tasks").success(function (response) {
                     _this.scope.tasks = response.Items;
                 });
             };
@@ -73,7 +71,7 @@ var KanbanBoardApp;
                 });
             };
             scope.deleteTask = function (task) {
-                _this.http.delete("/boards/" + _this.scope.currentBoard.Slug + "/tasks/" + task.Id).success(function (response) {
+                _this.http.delete("http://localhost:2943/boards/" + _this.scope.currentBoard.Slug + "/tasks/" + task.Id).success(function (response) {
                     var index = _this.scope.tasks.indexOf(task);
                     if (index > -1) {
                         _this.scope.tasks.splice(index, 1);
@@ -101,7 +99,7 @@ var KanbanBoardApp;
                 });
             };
             scope.updateTask = function (task) {
-                _this.http.put("/boards/" + _this.scope.currentBoard.Slug + "/tasks/" + task.Id, task).success(function (response) {
+                _this.http.put("http://localhost:2943/boards/" + _this.scope.currentBoard.Slug + "/tasks/" + task.Id, task).success(function (response) {
                     // do something
                 });
             };
@@ -136,7 +134,7 @@ var KanbanBoardApp;
                 });
             };
             scope.deleteColumn = function (column) {
-                _this.http.delete("/boards/" + _this.scope.currentBoard.Slug + "/columns/" + column.Slug).success(function (response) {
+                _this.http.delete("http://localhost:2943/boards/" + _this.scope.currentBoard.Slug + "/columns/" + column.Slug).success(function (response) {
                     var index = _this.scope.columns.indexOf(column);
                     if (index > -1) {
                         _this.scope.columns.splice(index, 1);
@@ -145,7 +143,7 @@ var KanbanBoardApp;
             };
             scope.onDragComplete = function (data, event, columnSlug) {
                 data.BoardColumnSlug = columnSlug;
-                _this.http.put("/boards/" + _this.scope.currentBoard.Slug + "/tasks/" + data.Id, data).success(function (response) {
+                _this.http.put("http://localhost:2943/boards/" + _this.scope.currentBoard.Slug + "/tasks/" + data.Id, data).success(function (response) {
                     // do something
                 });
             };

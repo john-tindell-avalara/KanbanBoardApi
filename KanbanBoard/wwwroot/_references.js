@@ -3,6 +3,7 @@
 /// <reference path="app/AddBoardController.js" />
 /// <reference path="app/AddColumnController.js" />
 /// <reference path="app/AddTaskController.js" />
+/// <reference path="app/app.js" />
 /// <reference path="app/BoardController.js" />
 /// <reference path="app/IAddBoardScope.js" />
 /// <reference path="app/IAddColumnScope.js" />

@@ -5,7 +5,7 @@
             scope.save = () => {
                 if (this.scope.updateColumnForm.$valid) {
                     currentColumn.Name = this.scope.updateColumnForm.name.$viewValue;
-                    this.http.put("/boards/" + this.currentBoard.Slug + "/columns/" + currentColumn.Slug, currentColumn).success((response: any) => {
+                    this.http.put("http://localhost:2943/boards/" + this.currentBoard.Slug + "/columns/" + currentColumn.Slug, currentColumn).success((response: any) => {
                         this.scope.$emit('ColumnUpdated', response);
                         modalInstance.dismiss(null);
                     }).error((error: any, status: number) => {

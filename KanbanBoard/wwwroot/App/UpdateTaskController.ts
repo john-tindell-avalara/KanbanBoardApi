@@ -9,7 +9,7 @@ module KanbanBoardApp {
                     this.currentTask.Description = this.scope.updateTaskForm.description.$viewValue;
                     console.log(this.scope.updateTaskForm.columnSlug);
                     this.currentTask.BoardColumnSlug = this.scope.updateTaskForm.columnSlug.$viewValue;
-                    this.http.put("/boards/" + this.currentBoard.Slug + "/tasks/" + this.currentTask.Id, this.currentTask).success((response: any) => {
+                    this.http.put("http://localhost:2943/boards/" + this.currentBoard.Slug + "/tasks/" + this.currentTask.Id, this.currentTask).success((response: any) => {
                         this.scope.$emit('TaskUpdated', response);
                         modalInstance.dismiss(null);
                     }).error((error: any, status: number) => {
