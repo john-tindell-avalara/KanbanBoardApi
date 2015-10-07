@@ -54,7 +54,7 @@
             scope.createBoard = () => {
                 modal.open({
                     animation: true,
-                    templateUrl: 'AddBoardModal.html',
+                    templateUrl: '/App/Views/AddBoardModal.html',
                     controller: 'AddBoardController',
                     scope: this.scope
                 });
@@ -63,7 +63,7 @@
             scope.createTask = (columnSlug: string) => {
                 modal.open({
                     animation: true,
-                    templateUrl: 'AddTaskModal.html',
+                    templateUrl: '/App/Views/AddTaskModal.html',
                     controller: 'AddTaskController',
                     scope: this.scope,
                     resolve: {
@@ -90,7 +90,7 @@
                 var newTask = angular.copy(task);
                 modal.open({
                     animation: true,
-                    templateUrl: 'UpdateTaskModal.html',
+                    templateUrl: '/App/Views/UpdateTaskModal.html',
                     controller: 'UpdateTaskController',
                     scope: this.scope,
                     resolve: {
@@ -116,7 +116,7 @@
             scope.createColumn = () => {
                 modal.open({
                     animation: true,
-                    templateUrl: 'AddColumnModal.html',
+                    templateUrl: '/App/Views/AddColumnModal.html',
                     controller: 'AddColumnController',
                     scope: this.scope,
                     resolve: {
@@ -131,7 +131,7 @@
                 var newColumn = angular.copy(column);
                 modal.open({
                     animation: true,
-                    templateUrl: 'UpdateColumnModal.html',
+                    templateUrl: '/App/Views/UpdateColumnModal.html',
                     controller: 'UpdateColumnController',
                     scope: this.scope,
                     resolve: {

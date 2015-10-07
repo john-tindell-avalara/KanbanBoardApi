@@ -1,7 +1,7 @@
 ﻿module KanbanBoardApp {
     export class Settings {
-        //public static ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
-        public static ApiLocation = "http://localhost:2943/";
+        public static ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
+        //public static ApiLocation = "http://localhost:2943/";
     }
     var app = angular.module('KanbanBoardApp', ['ngRoute', 'ngDraggable', 'ui.bootstrap', 'AdalAngular']);
     

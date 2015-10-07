@@ -49,7 +49,7 @@ var KanbanBoardApp;
             scope.createBoard = function () {
                 modal.open({
                     animation: true,
-                    templateUrl: 'AddBoardModal.html',
+                    templateUrl: '/App/Views/AddBoardModal.html',
                     controller: 'AddBoardController',
                     scope: _this.scope
                 });
@@ -57,7 +57,7 @@ var KanbanBoardApp;
             scope.createTask = function (columnSlug) {
                 modal.open({
                     animation: true,
-                    templateUrl: 'AddTaskModal.html',
+                    templateUrl: '/App/Views/AddTaskModal.html',
                     controller: 'AddTaskController',
                     scope: _this.scope,
                     resolve: {
@@ -82,7 +82,7 @@ var KanbanBoardApp;
                 var newTask = angular.copy(task);
                 modal.open({
                     animation: true,
-                    templateUrl: 'UpdateTaskModal.html',
+                    templateUrl: '/App/Views/UpdateTaskModal.html',
                     controller: 'UpdateTaskController',
                     scope: _this.scope,
                     resolve: {
@@ -106,7 +106,7 @@ var KanbanBoardApp;
             scope.createColumn = function () {
                 modal.open({
                     animation: true,
-                    templateUrl: 'AddColumnModal.html',
+                    templateUrl: '/App/Views/AddColumnModal.html',
                     controller: 'AddColumnController',
                     scope: _this.scope,
                     resolve: {
@@ -120,7 +120,7 @@ var KanbanBoardApp;
                 var newColumn = angular.copy(column);
                 modal.open({
                     animation: true,
-                    templateUrl: 'UpdateColumnModal.html',
+                    templateUrl: '/App/Views/UpdateColumnModal.html',
                     controller: 'UpdateColumnController',
                     scope: _this.scope,
                     resolve: {

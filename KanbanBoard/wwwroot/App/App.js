@@ -3,8 +3,7 @@ var KanbanBoardApp;
     var Settings = (function () {
         function Settings() {
         }
-        //public static ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
-        Settings.ApiLocation = "http://localhost:2943/";
+        Settings.ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
         return Settings;
     })();
     KanbanBoardApp.Settings = Settings;
