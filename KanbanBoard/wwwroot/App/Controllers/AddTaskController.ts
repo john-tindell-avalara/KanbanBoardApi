@@ -9,7 +9,7 @@ module KanbanBoardApp {
                         Description: this.scope.addTaskForm.description.$viewValue,
                         BoardColumnSlug: this.columnSlug
                     };
-                    this.http.post("http://localhost:2943/boards/" + this.currentBoard.Slug + "/tasks", task).success((response: any) => {
+                    this.http.post(KanbanBoardApp.Settings.ApiLocation +  "/boards/" + this.currentBoard.Slug + "/tasks", task).success((response: any) => {
                         this.scope.$emit('newTaskCreated', response);
                         modalInstance.dismiss(null);
                     }).error((error: any, status: number) => {

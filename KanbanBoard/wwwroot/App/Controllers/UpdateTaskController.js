@@ -17,7 +17,7 @@ var KanbanBoardApp;
                     _this.currentTask.Description = _this.scope.updateTaskForm.description.$viewValue;
                     console.log(_this.scope.updateTaskForm.columnSlug);
                     _this.currentTask.BoardColumnSlug = _this.scope.updateTaskForm.columnSlug.$viewValue;
-                    _this.http.put("http://localhost:2943/boards/" + _this.currentBoard.Slug + "/tasks/" + _this.currentTask.Id, _this.currentTask).success(function (response) {
+                    _this.http.put(KanbanBoardApp.Settings.ApiLocation + "/boards/" + _this.currentBoard.Slug + "/tasks/" + _this.currentTask.Id, _this.currentTask).success(function (response) {
                         _this.scope.$emit('TaskUpdated', response);
                         modalInstance.dismiss(null);
                     }).error(function (error, status) {

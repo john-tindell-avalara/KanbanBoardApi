@@ -10,7 +10,7 @@ var KanbanBoardApp;
             scope.save = function () {
                 if (_this.scope.columnForm.$valid) {
                     var column = { Name: _this.scope.columnForm.name.$viewValue };
-                    _this.http.post("http://localhost:2943/boards/" + _this.currentBoard.Slug + "/columns", column).success(function (response) {
+                    _this.http.post(KanbanBoardApp.Settings.ApiLocation + "/boards/" + _this.currentBoard.Slug + "/columns", column).success(function (response) {
                         _this.scope.$emit('newColumnCreated', response);
                         modalInstance.dismiss(null);
                     }).error(function (error, status) {

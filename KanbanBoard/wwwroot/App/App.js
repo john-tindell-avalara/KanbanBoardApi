@@ -1,5 +1,13 @@
 var KanbanBoardApp;
 (function (KanbanBoardApp) {
+    var Settings = (function () {
+        function Settings() {
+        }
+        //public static ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
+        Settings.ApiLocation = "http://localhost:2943/";
+        return Settings;
+    })();
+    KanbanBoardApp.Settings = Settings;
     var app = angular.module('KanbanBoardApp', ['ngRoute', 'ngDraggable', 'ui.bootstrap', 'AdalAngular']);
     app.config(['$routeProvider', '$httpProvider', 'adalAuthenticationServiceProvider', function ($routeProvider, $httpProvider, adalProvider) {
             $routeProvider.when('/', {
@@ -13,8 +21,8 @@ var KanbanBoardApp;
             adalProvider.init({
                 //instance: 'http://localhost:56134/',
                 //tenant: false,
-                tenant: 'yeticode2.onmicrosoft.com',
-                clientId: '294b29a5-f786-4745-adca-3f43185fdb36',
+                tenant: 'johnyeticodeco.onmicrosoft.com',
+                clientId: '1349a492-7dd3-4105-9605-059e12770f9f',
                 extraQueryParameter: 'nux=1'
             }, $httpProvider);
         }]);

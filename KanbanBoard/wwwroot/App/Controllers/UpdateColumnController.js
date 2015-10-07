@@ -12,7 +12,7 @@ var KanbanBoardApp;
             scope.save = function () {
                 if (_this.scope.updateColumnForm.$valid) {
                     currentColumn.Name = _this.scope.updateColumnForm.name.$viewValue;
-                    _this.http.put("http://localhost:2943/boards/" + _this.currentBoard.Slug + "/columns/" + currentColumn.Slug, currentColumn).success(function (response) {
+                    _this.http.put(KanbanBoardApp.Settings.ApiLocation + "/boards/" + _this.currentBoard.Slug + "/columns/" + currentColumn.Slug, currentColumn).success(function (response) {
                         _this.scope.$emit('ColumnUpdated', response);
                         modalInstance.dismiss(null);
                     }).error(function (error, status) {

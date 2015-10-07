@@ -15,7 +15,7 @@ var KanbanBoardApp;
                         Description: _this.scope.addTaskForm.description.$viewValue,
                         BoardColumnSlug: _this.columnSlug
                     };
-                    _this.http.post("http://localhost:2943/boards/" + _this.currentBoard.Slug + "/tasks", task).success(function (response) {
+                    _this.http.post(KanbanBoardApp.Settings.ApiLocation + "/boards/" + _this.currentBoard.Slug + "/tasks", task).success(function (response) {
                         _this.scope.$emit('newTaskCreated', response);
                         modalInstance.dismiss(null);
                     }).error(function (error, status) {
