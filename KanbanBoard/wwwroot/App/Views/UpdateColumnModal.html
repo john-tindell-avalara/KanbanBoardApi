@@ -1,0 +1,22 @@
+﻿<form ng-submit="save()" name="updateColumnForm" novalidate>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Update Column</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" ng-class="{ 'has-error': updateColumnForm.name.$invalid && updateColumnForm.name.$dirty }">
+                <input type="text" class="form-control" name="name" placeholder="Column Name" ng-model="currentColumn.Name" required />
+            </div>
+            <div class="form-group" ng-class="{ 'has-error': updateColumnForm.Order.$invalid && updateColumnForm.Order.$dirty }">
+                <input type="number" class="form-control" name="order" placeholder="Column Order" ng-model="currentColumn.Order" required />
+            </div>
+            <div ng-show="errorMessage" class="form-group has-error">
+                <p class="help-block">{{ errorMessage }}</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="updateColumnForm.$invalid">Create</button>
+        </div>
+    </div>
+</form>

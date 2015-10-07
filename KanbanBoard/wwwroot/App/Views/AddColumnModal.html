@@ -1,0 +1,19 @@
+﻿<form ng-submit="save()" name="columnForm" novalidate>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Create New Column</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" ng-class="{ 'has-error': columnForm.name.$invalid && columnForm.name.$dirty }">
+                <input type="text" class="form-control" name="name" placeholder="Column Name" ng-model="name" required />
+            </div>
+            <div ng-show="errorMessage" class="form-group has-error">
+                <p class="help-block">{{ errorMessage }}</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="columnForm.$invalid">Create</button>
+        </div>
+    </div>
+</form>

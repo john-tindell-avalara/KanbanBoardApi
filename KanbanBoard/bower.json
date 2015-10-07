@@ -4,7 +4,9 @@
   "dependencies": {
     "angularjs": "*",
     "angular-bootstrap": "*",
+    "angular-route": "*",
     "ngDraggable": "*",
+    "adal-angular": "*",
     "bootstrap": "3.0.0",
     "bootstrap-touch-carousel": "0.8.0",
     "hammer.js": "2.0.4",
