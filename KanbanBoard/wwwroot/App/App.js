@@ -17,10 +17,7 @@ var KanbanBoardApp;
                 controller: 'HomeController',
                 templateUrl: 'App/Views/Login.html'
             });
-            $locationProvider.html5Mode(true);
-            //$httpProvider.defaults.useXDomain = true;
-            //$httpProvider.defaults.headers.common = 'Content-Type: application/json';
-            //delete $httpProvider.defaults.headers.common['X-Requested-With'];
+            //$locationProvider.html5Mode(true).hashPrefix("!");
             adalProvider.init({
                 //instance: 'http://localhost:56134/',
                 //tenant: false,
