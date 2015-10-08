@@ -8,11 +8,14 @@ var KanbanBoardApp;
     })();
     KanbanBoardApp.Settings = Settings;
     var app = angular.module('KanbanBoardApp', ['ngRoute', 'ngDraggable', 'ui.bootstrap', 'AdalAngular']);
-    app.config(['$routeProvider', '$httpProvider', 'adalAuthenticationServiceProvider', function ($routeProvider, $httpProvider, adalProvider) {
-            $routeProvider.when('/', {
+    app.config(['$routeProvider', '$locationProvider', '$httpProvider', 'adalAuthenticationServiceProvider', function ($routeProvider, $locationProvider, $httpProvider, adalProvider) {
+            $routeProvider.when('/boards', {
                 controller: 'BoardController',
                 templateUrl: '/App/Views/Board.html',
                 requireADLogin: true
+            }).when('/', {
+                controller: 'HomeController',
+                templateUrl: 'App/Views/Login.html'
             });
             $httpProvider.defaults.headers.common['Ocp-Apim-Subscription-Key'] = '7cbb6034a7da4095a7904032077975c9';
             adalProvider.init({
@@ -23,6 +26,7 @@ var KanbanBoardApp;
                 extraQueryParameter: 'nux=1'
             }, $httpProvider);
         }]);
+    app.controller("HomeContorller", ['$scope', KanbanBoardApp.HomeController]);
     app.controller("BoardController", ['$scope', '$http', '$modal', KanbanBoardApp.BoardController]);
     app.controller("AddBoardController", ['$scope', '$http', '$modalInstance', KanbanBoardApp.AddBoardController]);
     app.controller("AddColumnController", ['$scope', '$http', '$modalInstance', 'currentBoard', KanbanBoardApp.AddColumnController]);

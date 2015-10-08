@@ -54,5 +54,5 @@ gulp.task("min:css", function () {
 gulp.task("min", ["min:js", "min:app", "min:css"]);
 
 gulp.task('watch', function () {
-    return gulp.watch([paths.js, paths.appJs], ['min']);
+    return gulp.watch([paths.js, paths.app], ['min']);
 });

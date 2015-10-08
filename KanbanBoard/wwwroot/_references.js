@@ -5,6 +5,7 @@
 /// <reference path="app/controllers/addcolumncontroller.js" />
 /// <reference path="app/controllers/addtaskcontroller.js" />
 /// <reference path="app/controllers/boardcontroller.js" />
+/// <reference path="app/controllers/homecontroller.js" />
 /// <reference path="app/controllers/iaddboardscope.js" />
 /// <reference path="app/controllers/iaddcolumnscope.js" />
 /// <reference path="app/controllers/iaddtaskscope.js" />
