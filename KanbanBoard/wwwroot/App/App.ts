@@ -1,11 +1,12 @@
 ﻿module KanbanBoardApp {
     export class Settings {
-        public static ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
+        public static ApiLocation = "https://yeticode.azure-api.net/kanban";
+        //public static ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
         //public static ApiLocation = "http://localhost:2943/";
     }
+
     var app = angular.module('KanbanBoardApp', ['ngRoute', 'ngDraggable', 'ui.bootstrap', 'AdalAngular']);
-    
-    
+
     app.config(
         ['$routeProvider', '$httpProvider', 'adalAuthenticationServiceProvider', ($routeProvider, $httpProvider, adalProvider) => {
             $routeProvider.when('/', {
@@ -14,9 +15,7 @@
                 requireADLogin: true
             });
 
-            //$httpProvider.defaults.useXDomain = true;
-            //$httpProvider.defaults.headers.common = 'Content-Type: application/json';
-            //delete $httpProvider.defaults.headers.common['X-Requested-With'];
+            $httpProvider.defaults.headers.common['Ocp-Apim-Subscription-Key'] = '7cbb6034a7da4095a7904032077975c9';
 
             adalProvider.init(
                 {

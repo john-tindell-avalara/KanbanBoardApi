@@ -3,7 +3,7 @@ var KanbanBoardApp;
     var Settings = (function () {
         function Settings() {
         }
-        Settings.ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
+        Settings.ApiLocation = "https://yeticode.azure-api.net/kanban";
         return Settings;
     })();
     KanbanBoardApp.Settings = Settings;
@@ -14,9 +14,7 @@ var KanbanBoardApp;
                 templateUrl: '/App/Views/Board.html',
                 requireADLogin: true
             });
-            //$httpProvider.defaults.useXDomain = true;
-            //$httpProvider.defaults.headers.common = 'Content-Type: application/json';
-            //delete $httpProvider.defaults.headers.common['X-Requested-With'];
+            $httpProvider.defaults.headers.common['Ocp-Apim-Subscription-Key'] = '7cbb6034a7da4095a7904032077975c9';
             adalProvider.init({
                 //instance: 'http://localhost:56134/',
                 //tenant: false,
