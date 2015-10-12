@@ -6,7 +6,8 @@ namespace KanbanBoardApi.Dto.Validators
     {
         public BoardValidator()
         {
-            RuleFor(x => x.Name).Length(1, 100);
+            RuleFor(x => x.Name).NotEmpty().Length(1, 100);
+            RuleFor(x => x.Slug).Length(1, 100);
         }
     }
 }

@@ -108,7 +108,7 @@ namespace KanbanBoardApi
                     // If you want to post-modify "complex" Schemas once they've been generated, across the board or for a
                     // specific type, you can wire up one or more Schema filters.
                     //
-                    //c.SchemaFilter<ApplySchemaVendorExtensions>();
+                    c.SchemaFilter<AddFluentValidationRules>();
 
                     // Set this flag to omit schema property descriptions for any type properties decorated with the
                     // Obsolete attribute 

@@ -1,7 +1,10 @@
 ﻿using System.Web.Http;
+using FluentValidation;
 using KanbanBoardApi.Commands.Handlers;
 using KanbanBoardApi.Commands.Services;
 using KanbanBoardApi.Dispatchers;
+using KanbanBoardApi.Dto;
+using KanbanBoardApi.Dto.Validators;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.HyperMedia;
 using KanbanBoardApi.HyperMedia.States;
@@ -37,6 +40,8 @@ namespace KanbanBoardApi
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.EnableHttpRequestMessageTracking(GlobalConfiguration.Configuration);
             container.RegisterSingleton<IRequestMessageProvider>(new RequestMessageProvider(container));
+
+            container.Register<IValidator<Board>, BoardValidator>();
 
             container.Verify();
 

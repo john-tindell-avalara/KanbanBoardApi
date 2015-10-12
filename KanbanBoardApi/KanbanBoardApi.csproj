@@ -189,9 +189,11 @@
     <Folder Include="Areas\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AddFluentValidationRules.cs" />
     <Compile Include="App_Start\AutomapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\FluentValidatorFactory.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SimpleInjectorConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
