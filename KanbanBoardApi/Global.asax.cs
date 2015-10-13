@@ -10,12 +10,11 @@ namespace KanbanBoardApi
 {
     public class WebApiApplication : HttpApplication
     {
-        private static Container container;
+        public static Container Container = new Container();
 
         protected void Application_Start()
         {
-            container = new Container();
-            SimpleInjectorConfig.Register(container);
+            SimpleInjectorConfig.Register(Container);
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -23,7 +22,11 @@ namespace KanbanBoardApi
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AutomapperConfig.Register();
 
-            FluentValidationModelValidatorProvider.Configure(GlobalConfiguration.Configuration);
+            FluentValidationModelValidatorProvider.Configure(GlobalConfiguration.Configuration,
+                provider =>
+                {
+                    provider.ValidatorFactory = new FluentValidatorFactory(Container);
+                });
         }
     }
 }

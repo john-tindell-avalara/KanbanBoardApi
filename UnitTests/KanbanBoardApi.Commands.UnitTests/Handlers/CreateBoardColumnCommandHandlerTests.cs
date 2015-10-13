@@ -119,17 +119,19 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
         public async void GivenABoardColumnWhenSlugAlreadyExistsThenThrowCreateBoardColumnCommandSlugExistsException()
         {
             // Arrange
+            var boardEntity = new BoardEntity { Slug = "test" };
             SetupCommandHandler(new List<BoardColumnEntity>
             {
                 new BoardColumnEntity
                 {
                     Id = 1,
                     Name = "test",
-                    Slug = "test"
+                    Slug = "test",
+                    BoardEntity = boardEntity
                 }
             }, new List<BoardEntity>
             {
-                new BoardEntity {Slug = "test"}
+                boardEntity
             });
 
             var command = new CreateBoardColumnCommand

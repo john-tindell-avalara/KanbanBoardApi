@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.OData;
 using KanbanBoardApi.Commands;
 using KanbanBoardApi.Dispatchers;
 using KanbanBoardApi.Dto;
@@ -83,6 +84,35 @@ namespace KanbanBoardApi.Controllers
                 return BadRequest("Board Column Not Found");
             }
         }
+
+        [HttpPatch]
+        [Route("{boardSlug}/tasks/{taskId:int}", Name = "BoardTaskPatch")]
+        [ResponseType(typeof(BoardTask))]
+        public async Task<IHttpActionResult> Patch(string boardSlug, int taskId, Delta<BoardTask> boardTask)
+        {
+            try
+            {
+                var result = await commandDispatcher.HandleAsync<PatchBoardTaskCommand, BoardTask>(new PatchBoardTaskCommand
+                {
+                    BoardSlug = boardSlug,
+                    BoardTaskId = taskId,
+                    BoardTask = boardTask
+                });
+
+                hyperMediaFactory.Apply(result);
+
+                return Ok(result);
+            }
+            catch (BoardTaskNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (BoardColumnNotFoundException)
+            {
+                return BadRequest("Board Column Not Found");
+            }
+        }
+
 
         [HttpGet]
         [Route("{boardSlug}/tasks/{taskId:int}", Name = "BoardTaskGet")]
