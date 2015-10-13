@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
+using KanbanBoardApi.Dto;
 
-namespace KanbanBoardApi.Dto.Validators
+namespace KanbanBoardApi.Validation
 {
-    public class BoardValidator : AbstractValidator<Board>
+    public class BoardColumnValidator : AbstractValidator<BoardColumn>
     {
-        public BoardValidator()
+        public BoardColumnValidator()
         {
             RuleFor(x => x.Name).NotEmpty().Length(1, 100);
             RuleFor(x => x.Slug).Length(1, 100);

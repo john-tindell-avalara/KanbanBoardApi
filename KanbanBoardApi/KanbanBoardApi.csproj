@@ -276,6 +276,10 @@
       <Project>{D8A980A2-8FC3-40C3-9FAE-BDB2A76D7583}</Project>
       <Name>KanbanBoardApi.Queries</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KanbanBoardApi.Validation\KanbanBoardApi.Validation.csproj">
+      <Project>{9F0A78BB-F0E7-4D02-8F54-9B2A31367940}</Project>
+      <Name>KanbanBoardApi.Validation</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

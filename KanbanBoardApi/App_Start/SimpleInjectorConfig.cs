@@ -4,12 +4,12 @@ using KanbanBoardApi.Commands.Handlers;
 using KanbanBoardApi.Commands.Services;
 using KanbanBoardApi.Dispatchers;
 using KanbanBoardApi.Dto;
-using KanbanBoardApi.Dto.Validators;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.HyperMedia;
 using KanbanBoardApi.HyperMedia.States;
 using KanbanBoardApi.Mapping;
 using KanbanBoardApi.Queries.Handlers;
+using KanbanBoardApi.Validation;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 

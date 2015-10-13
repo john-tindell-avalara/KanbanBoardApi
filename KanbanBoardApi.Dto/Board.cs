@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
-using KanbanBoardApi.Dto.Validators;
 
 namespace KanbanBoardApi.Dto
 {
