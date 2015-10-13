@@ -1,8 +1,8 @@
 ﻿module KanbanBoardApp {
     export class Settings {
-        public static ApiLocation = "https://yeticode.azure-api.net/kanban";
+        //public static ApiLocation = "https://yeticode.azure-api.net/kanban";
         //public static ApiLocation = "https://yeticode-kanbanboardapi.azurewebsites.net";
-        //public static ApiLocation = "http://localhost:2943/";
+        public static ApiLocation = "http://localhost:2943/";
     }
 
     var app = angular.module('KanbanBoardApp', ['ngRoute', 'ngDraggable', 'ui.bootstrap', 'AdalAngular']);
@@ -22,10 +22,10 @@
 
             adalProvider.init(
                 {
-                    //instance: 'http://localhost:56134/',
-                    //tenant: false,
-                    tenant: 'johnyeticodeco.onmicrosoft.com',
-                    clientId: '1349a492-7dd3-4105-9605-059e12770f9f',
+                    instance: 'http://localhost:56134/',
+                    tenant: false,
+                    //tenant: 'common',
+                    clientId: 'http://kanban.yeticode.co.uk/',
                     extraQueryParameter: 'nux=1'
                     //cacheLocation: 'localStorage', // enable this for IE, as sessionStorage does not work for localhost.
                 },
