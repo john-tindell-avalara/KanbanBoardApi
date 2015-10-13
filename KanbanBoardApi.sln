@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanBoardApi.Mapping", "K
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanBoardApi.Exceptions", "KanbanBoardApi.Exceptions\KanbanBoardApi.Exceptions.csproj", "{238A4A72-29FF-4A4B-84C8-41BE8FA04F50}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanBoardApi.Validation", "KanbanBoardApi.Validation\KanbanBoardApi.Validation.csproj", "{9F0A78BB-F0E7-4D02-8F54-9B2A31367940}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{238A4A72-29FF-4A4B-84C8-41BE8FA04F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{238A4A72-29FF-4A4B-84C8-41BE8FA04F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{238A4A72-29FF-4A4B-84C8-41BE8FA04F50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F0A78BB-F0E7-4D02-8F54-9B2A31367940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F0A78BB-F0E7-4D02-8F54-9B2A31367940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F0A78BB-F0E7-4D02-8F54-9B2A31367940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F0A78BB-F0E7-4D02-8F54-9B2A31367940}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
