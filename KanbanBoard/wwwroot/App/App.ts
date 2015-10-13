@@ -22,10 +22,10 @@
 
             adalProvider.init(
                 {
-                    //instance: 'http://localhost:56134/',
-                    //tenant: false,
-                    tenant: 'johnyeticodeco.onmicrosoft.com',
-                    clientId: '1349a492-7dd3-4105-9605-059e12770f9f',
+                    instance: 'http://localhost:56134/',
+                    tenant: false,
+                    //tenant: 'common',
+                    clientId: 'http://kanban.yeticode.co.uk/',
                     extraQueryParameter: 'nux=1'
                     //cacheLocation: 'localStorage', // enable this for IE, as sessionStorage does not work for localhost.
                 },

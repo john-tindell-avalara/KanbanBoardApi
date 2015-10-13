@@ -6,6 +6,9 @@ namespace KanbanBoardApi
     {
         public static void Register(HttpConfiguration config)
         {
+            // enable tracing
+            config.EnableSystemDiagnosticsTracing();
+
             // Web API configuration and services
             config.Filters.Add(new AuthorizeAttribute());
 

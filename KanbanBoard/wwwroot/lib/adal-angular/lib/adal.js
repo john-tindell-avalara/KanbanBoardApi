@@ -281,7 +281,7 @@ AuthenticationContext.prototype._renewToken = function (resource, callback) {
         urlNavigate += '&domain_hint=' + encodeURIComponent(this._getDomainHint());
     }
 
-    urlNavigate += '&nonce=' + encodeURIComponent(this._idTokenNonce);
+    urlNavigate += '&this._user.profile.nonce=' + encodeURIComponent(this._idTokenNonce);
     this.callback = callback;
     this.registerCallback(expectedState, resource, callback);
     this.idTokenNonce = null;
@@ -876,6 +876,8 @@ AuthenticationContext.prototype._decodeJwt = function (jwtToken) {
 
     var matches = idTokenPartsRegex.exec(jwtToken);
     if (!matches || matches.length < 4) {
+        this._logstatus("Token");
+        this._logstatus(jwtToken);
         this._logstatus('The returned id_token is not parseable.');
         return null;
     }
@@ -1032,7 +1034,7 @@ AuthenticationContext.prototype._logstatus = function (msg) {
 };
 
 AuthenticationContext.prototype._saveItem = function (key, obj) {
-
+    this._logstatus('_saveItem ' + key);
     if (this.config && this.config.cacheLocation && this.config.cacheLocation === 'localStorage') {
 
         if (!this._supportsLocalStorage()) {
@@ -1056,7 +1058,7 @@ AuthenticationContext.prototype._saveItem = function (key, obj) {
 };
 
 AuthenticationContext.prototype._getItem = function (key) {
-
+    this._logstatus('_getItem ' + key);
     if (this.config && this.config.cacheLocation && this.config.cacheLocation === 'localStorage') {
 
         if (!this._supportsLocalStorage()) {
