@@ -42,6 +42,8 @@ namespace KanbanBoardApi
             container.RegisterSingleton<IRequestMessageProvider>(new RequestMessageProvider(container));
 
             container.Register<IValidator<Board>, BoardValidator>();
+            container.Register<IValidator<BoardColumn>, BoardColumnValidator>();
+            container.Register<IValidator<BoardTask>, BoardTaskValidator>();
 
             container.Verify();
 
