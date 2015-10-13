@@ -15,7 +15,14 @@ namespace KanbanBoardApi
 
         public override IValidator CreateInstance(Type validatorType)
         {
-            return container.GetInstance(validatorType) as IValidator;
+            try
+            {
+                return container.GetInstance(validatorType) as IValidator;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
