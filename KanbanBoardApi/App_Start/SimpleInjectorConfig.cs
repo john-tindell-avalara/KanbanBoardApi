@@ -35,7 +35,7 @@ namespace KanbanBoardApi
             container.Register<IHyperMediaFactory, HyperMediaFactory>();
             container.Register<IMappingService, MappingService>();
 
-            container.RegisterWebApiRequest<IDataContext, DataContext>();
+            container.Register<IDataContext, DataContext>();
 
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.EnableHttpRequestMessageTracking(GlobalConfiguration.Configuration);

@@ -1,4 +1,5 @@
-﻿using System.Web.Http.Results;
+﻿using System;
+using System.Web.Http.Results;
 using KanbanBoardApi.Commands;
 using KanbanBoardApi.Controllers;
 using KanbanBoardApi.Dispatchers;
@@ -233,7 +234,7 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 const int taskId = 2;
                 mockQueryDispatcher.Setup(
                     x => x.HandleAsync<GetBoardTaskByIdQuery, BoardTask>(It.IsAny<GetBoardTaskByIdQuery>()))
-                    .ReturnsAsync(null);
+                    .ReturnsAsync(null, default(TimeSpan));
 
                 // Act
                 var notFoundResult = await controller.Get(boardSlug, taskId) as NotFoundResult;

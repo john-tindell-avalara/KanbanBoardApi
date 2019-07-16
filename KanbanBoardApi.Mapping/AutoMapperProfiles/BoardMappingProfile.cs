@@ -6,7 +6,7 @@ namespace KanbanBoardApi.Mapping.AutoMapperProfiles
 {
     public class BoardMappingProfile : Profile
     {
-        protected override void Configure()
+        public BoardMappingProfile()
         {
             CreateMap<BoardEntity, Board>();
             CreateMap<Board, BoardEntity>();
