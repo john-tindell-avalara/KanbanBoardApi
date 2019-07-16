@@ -2,27 +2,25 @@
 using System.Web.Http;
 using System.Web.Http.Description;
 using KanbanBoardApi.Commands;
-using KanbanBoardApi.Dispatchers;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.HyperMedia;
 using KanbanBoardApi.Queries;
+using MediatR;
 
 namespace KanbanBoardApi.Controllers
 {
     [RoutePrefix("boards")]
     public class BoardColumnController : ApiController
     {
-        private readonly ICommandDispatcher commandDispatcher;
         private readonly IHyperMediaFactory hyperMediaFactory;
-        private readonly IQueryDispatcher queryDispatcher;
+        private readonly IMediator mediator;
 
-        public BoardColumnController(ICommandDispatcher commandDispatcher, IHyperMediaFactory hyperMediaFactory,
-            IQueryDispatcher queryDispatcher)
+        public BoardColumnController(IHyperMediaFactory hyperMediaFactory,
+            IMediator mediator)
         {
-            this.commandDispatcher = commandDispatcher;
             this.hyperMediaFactory = hyperMediaFactory;
-            this.queryDispatcher = queryDispatcher;
+            this.mediator = mediator;
         }
 
         [HttpPut]
@@ -31,7 +29,7 @@ namespace KanbanBoardApi.Controllers
         {
             try
             {
-                var result = await commandDispatcher.HandleAsync<UpdateBoardColumnCommand, BoardColumn>(new UpdateBoardColumnCommand
+                var result = await mediator.Send(new UpdateBoardColumnCommand
                 {
                     BoardSlug = boardSlug,
                     BoardColumnSlug = boardColumnSlug,
@@ -58,7 +56,7 @@ namespace KanbanBoardApi.Controllers
         {
             try
             {
-                await commandDispatcher.HandleAsync<DeleteBoardColumnCommand, string>(new DeleteBoardColumnCommand
+                await mediator.Send(new DeleteBoardColumnCommand
                 {
                     BoardSlug = boardSlug,
                     BoardColumnSlug = boardColumnSlug
@@ -86,7 +84,7 @@ namespace KanbanBoardApi.Controllers
         public async Task<IHttpActionResult> Get(string boardSlug, string boardColumnSlug)
         {
             var boardColumn =
-                await queryDispatcher.HandleAsync<GetBoardColumnBySlugQuery, BoardColumn>(new GetBoardColumnBySlugQuery
+                await mediator.Send(new GetBoardColumnBySlugQuery
                 {
                     BoardSlug = boardSlug,
                     BoardColumnSlug = boardColumnSlug
@@ -109,7 +107,7 @@ namespace KanbanBoardApi.Controllers
         {
             try
             {
-                var boardColumnCollection = await queryDispatcher.HandleAsync<SearchBoardColumnsQuery, BoardColumnCollection>(
+                var boardColumnCollection = await mediator.Send(
                     new SearchBoardColumnsQuery
                     {
                         BoardSlug = boardSlug
@@ -138,7 +136,7 @@ namespace KanbanBoardApi.Controllers
             {
                 var result =
                     await
-                        commandDispatcher.HandleAsync<CreateBoardColumnCommand, BoardColumn>(new CreateBoardColumnCommand
+                        mediator.Send(new CreateBoardColumnCommand
                         {
                             BoardSlug = boardSlug,
                             BoardColumn = boardColumn

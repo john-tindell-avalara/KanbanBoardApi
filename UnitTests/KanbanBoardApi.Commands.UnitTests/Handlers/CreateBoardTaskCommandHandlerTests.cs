@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FakeDbSet;
 using KanbanBoardApi.Commands.Handlers;
 using KanbanBoardApi.Commands.Services;
@@ -67,7 +68,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
                 .Returns(new BoardTaskEntity());
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockDataContext.Verify(x => x.SaveChangesAsync(), Times.Once);
@@ -104,7 +105,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
                 .Returns(new BoardTaskEntity());
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.Equal(boardColumnEntity,
@@ -141,7 +142,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
                 .Returns(new BoardTaskEntity());
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockMappingService.Verify(x => x.Map<BoardTask>(It.IsAny<BoardTaskEntity>()), Times.Once);
@@ -172,7 +173,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             mockSlugService.Setup(x => x.Slugify(It.IsAny<string>())).Returns("test");
 
             // Act & Assert
-            await Assert.ThrowsAsync<BoardNotFoundException>(() => handler.HandleAsync(command));
+            await Assert.ThrowsAsync<BoardNotFoundException>(() => handler.Handle(command, CancellationToken.None));
         }
 
         [Fact]
@@ -203,7 +204,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             mockSlugService.Setup(x => x.Slugify(It.IsAny<string>())).Returns("test");
 
             // Act & Assert
-            await Assert.ThrowsAsync<BoardColumnNotFoundException>(() => handler.HandleAsync(command));
+            await Assert.ThrowsAsync<BoardColumnNotFoundException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

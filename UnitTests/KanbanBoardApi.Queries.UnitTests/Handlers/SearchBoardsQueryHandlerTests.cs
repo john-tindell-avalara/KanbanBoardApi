@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FakeDbSet;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
@@ -43,7 +44,7 @@ namespace KanbanBoardApi.Queries.UnitTests.Handlers
             var query = new SearchBoardsQuery();
 
             // Act
-            var boardCollection = await handler.HandleAsync(query);
+            var boardCollection = await handler.Handle(query, CancellationToken.None);
 
             // Assert
             Assert.NotNull(boardCollection);
@@ -57,7 +58,7 @@ namespace KanbanBoardApi.Queries.UnitTests.Handlers
             var query = new SearchBoardsQuery();
 
             // Act
-            var boardCollection = await handler.HandleAsync(query);
+            var boardCollection = await handler.Handle(query, CancellationToken.None);
 
             // Assert
             Assert.NotNull(boardCollection);

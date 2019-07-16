@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FakeDbSet;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
@@ -49,7 +50,7 @@ namespace KanbanBoardApi.Queries.UnitTests.Handlers
             };
 
             // Act
-            var boardColumn = await handler.HandleAsync(query);
+            var boardColumn = await handler.Handle(query, CancellationToken.None);
 
             // Assert
             Assert.NotNull(boardColumn);
@@ -63,7 +64,7 @@ namespace KanbanBoardApi.Queries.UnitTests.Handlers
             var query = new GetBoardTaskByIdQuery();
 
             // Act
-            var boardColumn = await handler.HandleAsync(query);
+            var boardColumn = await handler.Handle(query, CancellationToken.None);
 
             // Assert
             Assert.Null(boardColumn);

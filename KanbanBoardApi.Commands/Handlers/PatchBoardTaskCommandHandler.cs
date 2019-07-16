@@ -1,15 +1,17 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.Mapping;
+using MediatR;
 
 namespace KanbanBoardApi.Commands.Handlers
 {
-    public class PatchBoardTaskCommandHandler : ICommandHandler<PatchBoardTaskCommand, BoardTask>
+    public class PatchBoardTaskCommandHandler : IRequestHandler<PatchBoardTaskCommand, BoardTask>
     {
         private readonly IDataContext dataContext;
         private readonly IMappingService mappingService;
@@ -20,11 +22,11 @@ namespace KanbanBoardApi.Commands.Handlers
             this.mappingService = mappingService;
         }
 
-        public async Task<BoardTask> HandleAsync(PatchBoardTaskCommand command)
+        public async Task<BoardTask> Handle(PatchBoardTaskCommand request, CancellationToken cancellationToken)
         {
-;            var boardTaskEntity = await dataContext.Set<BoardTaskEntity>()
+            var boardTaskEntity = await dataContext.Set<BoardTaskEntity>()
                 .Include(x => x.BoardColumnEntity)
-                .FirstOrDefaultAsync(x => x.Id == command.BoardTaskId);
+                .FirstOrDefaultAsync(x => x.Id == request.BoardTaskId, cancellationToken);
 
             if (boardTaskEntity == null)
             {
@@ -33,14 +35,14 @@ namespace KanbanBoardApi.Commands.Handlers
 
             var boardTask = new BoardTask();
             mappingService.Map(boardTaskEntity, boardTask);
-            command.BoardTask.Patch(boardTask);
+            request.BoardTask.Patch(boardTask);
             mappingService.Map(boardTask, boardTaskEntity);
 
             if (!string.IsNullOrEmpty(boardTask.BoardColumnSlug))
             {
                 var boardColumnEntity = await dataContext.Set<BoardColumnEntity>()
-                .Where(x => x.Slug == boardTask.BoardColumnSlug && x.BoardEntity.Slug == command.BoardSlug)
-                .FirstOrDefaultAsync();
+                    .Where(x => x.Slug == boardTask.BoardColumnSlug && x.BoardEntity.Slug == request.BoardSlug)
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 if (boardColumnEntity == null)
                 {
@@ -49,7 +51,7 @@ namespace KanbanBoardApi.Commands.Handlers
 
                 boardTaskEntity.BoardColumnEntity = boardColumnEntity;
             }
-            
+
 
             dataContext.SetModified(boardTaskEntity);
 

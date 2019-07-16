@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FakeDbSet;
 using KanbanBoardApi.Commands.Handlers;
 using KanbanBoardApi.Commands.Services;
@@ -47,7 +48,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             mockMappingService.Setup(x => x.Map<BoardEntity>(It.IsAny<Board>())).Returns(new BoardEntity());
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockDataContext.Verify(x => x.SaveChangesAsync(), Times.Once);
@@ -66,7 +67,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             mockMappingService.Setup(x => x.Map<BoardEntity>(It.IsAny<Board>())).Returns(new BoardEntity());
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockMappingService.Verify(x => x.Map<Board>(It.IsAny<BoardEntity>()), Times.Once);
@@ -85,7 +86,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             mockMappingService.Setup(x => x.Map<BoardEntity>(It.IsAny<Board>())).Returns(new BoardEntity());
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockSlugService.Verify(x => x.Slugify(It.IsAny<string>()), Times.Once);
@@ -121,7 +122,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             mockSlugService.Setup(x => x.Slugify(It.IsAny<string>())).Returns("test");
 
             // Act & Assert
-            await Assert.ThrowsAsync<CreateBoardCommandSlugExistsException>(() => handler.HandleAsync(command));
+            await Assert.ThrowsAsync<CreateBoardCommandSlugExistsException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

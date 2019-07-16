@@ -2,27 +2,25 @@
 using System.Web.Http;
 using System.Web.Http.Description;
 using KanbanBoardApi.Commands;
-using KanbanBoardApi.Dispatchers;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.HyperMedia;
 using KanbanBoardApi.Queries;
+using MediatR;
 
 namespace KanbanBoardApi.Controllers
 {
     [RoutePrefix("boards")]
     public class BoardController : ApiController
     {
-        private readonly ICommandDispatcher commandDispatcher;
         private readonly IHyperMediaFactory hyperMediaFactory;
-        private readonly IQueryDispatcher queryDispatcher;
+        private readonly IMediator mediator;
 
-        public BoardController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher,
-            IHyperMediaFactory hyperMediaFactory)
+        public BoardController(IHyperMediaFactory hyperMediaFactory,
+            IMediator mediator)
         {
-            this.commandDispatcher = commandDispatcher;
-            this.queryDispatcher = queryDispatcher;
             this.hyperMediaFactory = hyperMediaFactory;
+            this.mediator = mediator;
         }
 
         /// <summary>
@@ -41,7 +39,7 @@ namespace KanbanBoardApi.Controllers
 
             try
             {
-                var result = await commandDispatcher.HandleAsync<CreateBoardCommand, Board>(
+                var result = await mediator.Send(
                     new CreateBoardCommand
                     {
                         Board = board
@@ -66,7 +64,7 @@ namespace KanbanBoardApi.Controllers
         [ResponseType(typeof (Board))]
         public async Task<IHttpActionResult> Get(string boardSlug)
         {
-            var result = await queryDispatcher.HandleAsync<GetBoardBySlugQuery, Board>(new GetBoardBySlugQuery
+            var result = await mediator.Send(new GetBoardBySlugQuery
             {
                 BoardSlug = boardSlug
             });
@@ -89,7 +87,7 @@ namespace KanbanBoardApi.Controllers
         [ResponseType(typeof (BoardCollection))]
         public async Task<IHttpActionResult> Search()
         {
-            var result = await queryDispatcher.HandleAsync<SearchBoardsQuery, BoardCollection>(new SearchBoardsQuery());
+            var result = await mediator.Send(new SearchBoardsQuery());
 
             hyperMediaFactory.Apply(result);
 

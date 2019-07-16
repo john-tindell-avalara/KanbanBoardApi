@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FakeDbSet;
 using KanbanBoardApi.Commands.Handlers;
 using KanbanBoardApi.Domain;
@@ -47,7 +48,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<BoardNotFoundException>(() => handler.HandleAsync(command));
+            await Assert.ThrowsAsync<BoardNotFoundException>(() => handler.Handle(command, CancellationToken.None));
         }
 
         [Fact]
@@ -65,7 +66,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<BoardColumnNotFoundException>(() => handler.HandleAsync(command));
+            await Assert.ThrowsAsync<BoardColumnNotFoundException>(() => handler.Handle(command, CancellationToken.None));
         }
 
         [Fact]
@@ -89,7 +90,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<BoardColumnNotEmptyException>(() => handler.HandleAsync(command));
+            await Assert.ThrowsAsync<BoardColumnNotEmptyException>(() => handler.Handle(command, CancellationToken.None));
         }
 
         [Fact]
@@ -110,7 +111,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             };
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockDataContext.Verify(x => x.SaveChangesAsync(), Times.Once());

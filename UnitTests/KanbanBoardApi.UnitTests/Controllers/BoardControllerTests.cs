@@ -1,11 +1,12 @@
-﻿using System.Web.Http.Results;
+﻿using System.Threading;
+using System.Web.Http.Results;
 using KanbanBoardApi.Commands;
 using KanbanBoardApi.Controllers;
-using KanbanBoardApi.Dispatchers;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.HyperMedia;
 using KanbanBoardApi.Queries;
+using MediatR;
 using Moq;
 using Xunit;
 
@@ -14,19 +15,16 @@ namespace KanbanBoardApi.UnitTests.Controllers
     public class BoardControllerTests
     {
         private BoardController controller;
-        private Mock<ICommandDispatcher> mockCommandDispatcher;
         private Mock<IHyperMediaFactory> mockHyperMediaFactory;
-        private Mock<IQueryDispatcher> mockQueryDispatcher;
+        private Mock<IMediator> mockMediator;
 
         private void SetupController()
         {
-            mockCommandDispatcher = new Mock<ICommandDispatcher>();
-            mockQueryDispatcher = new Mock<IQueryDispatcher>();
             mockHyperMediaFactory = new Mock<IHyperMediaFactory>();
+            mockMediator = new Mock<IMediator>();
             controller = new BoardController(
-                mockCommandDispatcher.Object,
-                mockQueryDispatcher.Object,
-                mockHyperMediaFactory.Object);
+                mockHyperMediaFactory.Object,
+                mockMediator.Object);
         }
 
         public class Post : BoardControllerTests
@@ -42,8 +40,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                     Name = "new board"
                 };
 
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<CreateBoardCommand, Board>(It.IsAny<CreateBoardCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<CreateBoardCommand>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new Board());
                 mockHyperMediaFactory.Setup(x => x.GetLink(It.IsAny<IHyperMediaItem>(), It.IsAny<string>()))
                     .Returns("http://fake-url/");
@@ -67,8 +65,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                     Name = "new board"
                 };
 
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<CreateBoardCommand, Board>(It.IsAny<CreateBoardCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<CreateBoardCommand>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new Board());
                 mockHyperMediaFactory.Setup(x => x.GetLink(It.IsAny<IHyperMediaItem>(), It.IsAny<string>()))
                     .Returns("http://fake-url/");
@@ -93,8 +91,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                     Name = "new board"
                 };
 
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<CreateBoardCommand, Board>(It.IsAny<CreateBoardCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<CreateBoardCommand>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new Board());
                 mockHyperMediaFactory.Setup(x => x.GetLink(It.IsAny<IHyperMediaItem>(), It.IsAny<string>()))
                     .Returns("http://fake-url/");
@@ -105,8 +103,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
 
                 // Assert
                 Assert.NotNull(createdNegotiatedContentResult);
-                mockCommandDispatcher.Verify(
-                    x => x.HandleAsync<CreateBoardCommand, Board>(It.IsAny<CreateBoardCommand>()),
+                mockMediator.Verify(
+                    x => x.Send(It.IsAny<CreateBoardCommand>(), It.IsAny<CancellationToken>()),
                     Times.Once);
             }
 
@@ -122,8 +120,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                     Name = "new board"
                 };
 
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<CreateBoardCommand, Board>(It.IsAny<CreateBoardCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<CreateBoardCommand>(), It.IsAny<CancellationToken>()))
                     .Throws<CreateBoardCommandSlugExistsException>();
 
                 // Act
@@ -160,8 +158,9 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 // Arrange
                 SetupController();
                 const string boardSlug = "test-slug";
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<GetBoardBySlugQuery, Board>(It.IsAny<GetBoardBySlugQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<GetBoardBySlugQuery>(),
+                        It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new Board());
 
                 // Act
@@ -183,10 +182,11 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 await controller.Get(boardSlug);
 
                 // Assert
-                mockQueryDispatcher.Verify(
+                mockMediator.Verify(
                     x =>
-                        x.HandleAsync<GetBoardBySlugQuery, Board>(
-                            It.Is<GetBoardBySlugQuery>(y => y.BoardSlug == boardSlug)),
+                        x.Send(
+                            It.Is<GetBoardBySlugQuery>(y => y.BoardSlug == boardSlug),
+                            It.IsAny<CancellationToken>()),
                     Times.Once);
             }
 
@@ -196,8 +196,9 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 // Arrange
                 SetupController();
                 const string boardSlug = "test-slug";
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<GetBoardBySlugQuery, Board>(It.IsAny<GetBoardBySlugQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<GetBoardBySlugQuery>(),
+                        It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new Board());
 
                 // Act
@@ -242,16 +243,16 @@ namespace KanbanBoardApi.UnitTests.Controllers
             {
                 // Arrange
                 SetupController();
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<SearchBoardsQuery, BoardCollection>(It.IsAny<SearchBoardsQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<SearchBoardsQuery>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new BoardCollection());
 
                 // Act
                 await controller.Search();
 
                 // Assert
-                mockQueryDispatcher.Verify(
-                    x => x.HandleAsync<SearchBoardsQuery, BoardCollection>(It.IsAny<SearchBoardsQuery>()), Times.Once);
+                mockMediator.Verify(
+                    x => x.Send(It.IsAny<SearchBoardsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -259,8 +260,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
             {
                 // Arrange
                 SetupController();
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<SearchBoardsQuery, BoardCollection>(It.IsAny<SearchBoardsQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<SearchBoardsQuery>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new BoardCollection());
 
                 // Act

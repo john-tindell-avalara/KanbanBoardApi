@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FakeDbSet;
 using KanbanBoardApi.Commands.Handlers;
 using KanbanBoardApi.Domain;
@@ -41,7 +42,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             var command = new UpdateBoardTaskCommand();
 
             // Act & Assert
-            await Assert.ThrowsAsync<BoardTaskNotFoundException>(() => handler.HandleAsync(command));
+            await Assert.ThrowsAsync<BoardTaskNotFoundException>(() => handler.Handle(command, CancellationToken.None));
         }
 
         [Fact]
@@ -73,7 +74,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             };
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockDataContext.Verify(x => x.SetModified(boardTaskEntry), Times.Once);
@@ -103,7 +104,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<BoardColumnNotFoundException>(() => handler.HandleAsync(command));
+            await Assert.ThrowsAsync<BoardColumnNotFoundException>(() => handler.Handle(command, CancellationToken.None));
         }
 
         [Fact]
@@ -133,7 +134,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             };
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockMappingService.Verify(x => x.Map(It.IsAny<BoardTask>(), It.IsAny<BoardTaskEntity>()), Times.Once);
@@ -166,7 +167,7 @@ namespace KanbanBoardApi.Commands.UnitTests.Handlers
             };
 
             // Act
-            await handler.HandleAsync(command);
+            await handler.Handle(command, CancellationToken.None);
 
             // Assert
             mockMappingService.Verify(x => x.Map<BoardTask>(It.IsAny<BoardTaskEntity>()), Times.Once);

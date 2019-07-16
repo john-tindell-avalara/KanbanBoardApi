@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Commands.Services;
 using KanbanBoardApi.Domain;
@@ -6,10 +8,11 @@ using KanbanBoardApi.Dto;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.Mapping;
+using MediatR;
 
 namespace KanbanBoardApi.Commands.Handlers
 {
-    public class CreateBoardCommandHandler : ICommandHandler<CreateBoardCommand, Board>
+    public class CreateBoardCommandHandler : IRequestHandler<CreateBoardCommand, Board>
     {
         private readonly IDataContext dataContext;
         private readonly IMappingService mappingService;
@@ -23,12 +26,12 @@ namespace KanbanBoardApi.Commands.Handlers
             this.slugService = slugService;
         }
 
-        public async Task<Board> HandleAsync(CreateBoardCommand command)
+        public async Task<Board> Handle(CreateBoardCommand request, CancellationToken cancellationToken)
         {
-            var board = mappingService.Map<BoardEntity>(command.Board);
+            var board = mappingService.Map<BoardEntity>(request.Board);
             board.Slug = slugService.Slugify(board.Name);
 
-            if (dataContext.Set<BoardEntity>().Any(x => x.Slug == board.Slug))
+            if (await dataContext.Set<BoardEntity>().AnyAsync(x => x.Slug == board.Slug, cancellationToken))
             {
                 throw new CreateBoardCommandSlugExistsException();
             }

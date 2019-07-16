@@ -1,15 +1,17 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.Mapping;
+using MediatR;
 
 namespace KanbanBoardApi.Commands.Handlers
 {
-    public class UpdateBoardTaskCommandHandler : ICommandHandler<UpdateBoardTaskCommand, BoardTask>
+    public class UpdateBoardTaskCommandHandler : IRequestHandler<UpdateBoardTaskCommand, BoardTask>
     {
         private readonly IDataContext dataContext;
         private readonly IMappingService mappingService;
@@ -20,9 +22,9 @@ namespace KanbanBoardApi.Commands.Handlers
             this.mappingService = mappingService;
         }
 
-        public async Task<BoardTask> HandleAsync(UpdateBoardTaskCommand command)
+        public async Task<BoardTask> Handle(UpdateBoardTaskCommand request, CancellationToken cancellationToken)
         {
-            var boardTaskEntity = await dataContext.Set<BoardTaskEntity>().FirstOrDefaultAsync(x => x.Id == command.BoardTask.Id);
+            var boardTaskEntity = await dataContext.Set<BoardTaskEntity>().FirstOrDefaultAsync(x => x.Id == request.BoardTask.Id, cancellationToken);
 
             if (boardTaskEntity == null)
             {
@@ -30,15 +32,15 @@ namespace KanbanBoardApi.Commands.Handlers
             }
 
             var boardColumnEntity = await dataContext.Set<BoardColumnEntity>()
-                .Where(x => x.Slug == command.BoardTask.BoardColumnSlug && x.BoardEntity.Slug == command.BoardSlug)
-                .FirstOrDefaultAsync();
+                .Where(x => x.Slug == request.BoardTask.BoardColumnSlug && x.BoardEntity.Slug == request.BoardSlug)
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (boardColumnEntity == null)
             {
                 throw new BoardColumnNotFoundException();
             }
 
-            mappingService.Map(command.BoardTask, boardTaskEntity);
+            mappingService.Map(request.BoardTask, boardTaskEntity);
 
             boardTaskEntity.BoardColumnEntity = boardColumnEntity;
 

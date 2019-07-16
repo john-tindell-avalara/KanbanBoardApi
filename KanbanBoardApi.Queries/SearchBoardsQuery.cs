@@ -1,6 +1,9 @@
-﻿namespace KanbanBoardApi.Queries
+﻿using KanbanBoardApi.Dto;
+using MediatR;
+
+namespace KanbanBoardApi.Queries
 {
-    public class SearchBoardsQuery : IQuery
+    public class SearchBoardsQuery : IRequest<BoardCollection>
     {
     }
 }

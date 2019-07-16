@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Threading;
 using System.Web.Http.Results;
 using KanbanBoardApi.Commands;
 using KanbanBoardApi.Controllers;
-using KanbanBoardApi.Dispatchers;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.HyperMedia;
 using KanbanBoardApi.Queries;
+using MediatR;
 using Moq;
 using Xunit;
 
@@ -15,19 +16,16 @@ namespace KanbanBoardApi.UnitTests.Controllers
     public class BoardTaskControllerTests
     {
         private BoardTaskController controller;
-        private Mock<ICommandDispatcher> mockCommandDispatcher;
         private Mock<IHyperMediaFactory> mockHyperMediaFactory;
-        private Mock<IQueryDispatcher> mockQueryDispatcher;
+        private Mock<IMediator> mockMediator;
 
         private void SetupController()
         {
-            mockCommandDispatcher = new Mock<ICommandDispatcher>();
-            mockQueryDispatcher = new Mock<IQueryDispatcher>();
             mockHyperMediaFactory = new Mock<IHyperMediaFactory>();
+            mockMediator = new Mock<IMediator>();
             controller = new BoardTaskController(
-                mockCommandDispatcher.Object,
-                mockQueryDispatcher.Object,
-                mockHyperMediaFactory.Object);
+                mockHyperMediaFactory.Object,
+                mockMediator.Object);
         }
 
         public class Post : BoardTaskControllerTests
@@ -39,8 +37,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 SetupController();
                 const string boardSlug = "board-name";
                 var boardTask = new BoardTask();
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<CreateBoardTaskCommand, BoardTask>(It.IsAny<CreateBoardTaskCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<CreateBoardTaskCommand>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new BoardTask());
                 mockHyperMediaFactory.Setup(x => x.GetLink(It.IsAny<IHyperMediaItem>(), It.IsAny<string>()))
                     .Returns("http://fake-url/");
@@ -67,10 +65,11 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 await controller.Post(boardSlug, boardTask);
 
                 // Assert
-                mockCommandDispatcher.Verify(
+                mockMediator.Verify(
                     x =>
-                        x.HandleAsync<CreateBoardTaskCommand, BoardTask>(
-                            It.Is<CreateBoardTaskCommand>(y => y.BoardTask == boardTask && y.BoardSlug == boardSlug)),
+                        x.Send(
+                            It.Is<CreateBoardTaskCommand>(y => y.BoardTask == boardTask && y.BoardSlug == boardSlug),
+                            It.IsAny<CancellationToken>()),
                     Times.Once);
             }
 
@@ -81,8 +80,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 SetupController();
                 const string boardSlug = "board-name";
                 var boardTask = new BoardTask();
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<CreateBoardTaskCommand, BoardTask>(It.IsAny<CreateBoardTaskCommand>()))
+                mockMediator.Setup(
+                        x => x.Send(It.IsAny<CreateBoardTaskCommand>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new BoardTask());
                 mockHyperMediaFactory.Setup(x => x.GetLink(It.IsAny<IHyperMediaItem>(), It.IsAny<string>()))
                     .Returns("http://fake-url/");
@@ -117,8 +116,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 SetupController();
                 const string boardSlug = "board-name";
                 var boardTask = new BoardTask();
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<CreateBoardTaskCommand, BoardTask>(It.IsAny<CreateBoardTaskCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<CreateBoardTaskCommand>(), It.IsAny<CancellationToken>()))
                     .Throws<BoardNotFoundException>();
 
                 // Act
@@ -135,8 +134,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 SetupController();
                 const string boardSlug = "board-name";
                 var boardTask = new BoardTask();
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<CreateBoardTaskCommand, BoardTask>(It.IsAny<CreateBoardTaskCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<CreateBoardTaskCommand>(), It.IsAny<CancellationToken>()))
                     .Throws<BoardColumnNotFoundException>();
 
                 // Act
@@ -158,8 +157,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 SetupController();
                 const string boardSlug = "board-name";
                 const int taskId = 1;
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<GetBoardTaskByIdQuery, BoardTask>(It.IsAny<GetBoardTaskByIdQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<GetBoardTaskByIdQuery>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new BoardTask());
 
                 // Act
@@ -184,10 +183,11 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 await controller.Get(boardSlug, taskId);
 
                 // Assert
-                mockQueryDispatcher.Verify(
+                mockMediator.Verify(
                     x =>
-                        x.HandleAsync<GetBoardTaskByIdQuery, BoardTask>(
-                            It.Is<GetBoardTaskByIdQuery>(y => y.TaskId == taskId && y.BoardSlug == boardSlug)),
+                        x.Send(
+                            It.Is<GetBoardTaskByIdQuery>(y => y.TaskId == taskId && y.BoardSlug == boardSlug),
+                            It.IsAny<CancellationToken>()),
                     Times.Once);
             }
 
@@ -199,8 +199,9 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 const string boardSlug = "board-name";
                 const int taskId = 1;
 
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<GetBoardTaskByIdQuery, BoardTask>(It.IsAny<GetBoardTaskByIdQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<GetBoardTaskByIdQuery>(),
+                    It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new BoardTask());
 
                 // Act
@@ -232,8 +233,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 SetupController();
                 const string boardSlug = "board-name";
                 const int taskId = 2;
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<GetBoardTaskByIdQuery, BoardTask>(It.IsAny<GetBoardTaskByIdQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<GetBoardTaskByIdQuery>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(null, default(TimeSpan));
 
                 // Act
@@ -267,8 +268,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 // Arrange
                 SetupController();
                 const string boardSlug = "board-name";
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<SearchBoardTasksQuery, BoardTaskCollection>(It.IsAny<SearchBoardTasksQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<SearchBoardTasksQuery>(), It.IsAny<CancellationToken>()))
                     .Throws<BoardNotFoundException>();
 
                 // Act
@@ -286,19 +287,20 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 const string boardSlug = "board-name";
                 const string boardColumnSlug = "board-column-name";
 
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<SearchBoardTasksQuery, BoardTaskCollection>(It.IsAny<SearchBoardTasksQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<SearchBoardTasksQuery>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new BoardTaskCollection());
 
                 // Act
                 await controller.Search(boardSlug, boardColumnSlug);
 
                 // Assert
-                mockQueryDispatcher.Verify(
+                mockMediator.Verify(
                     x =>
-                        x.HandleAsync<SearchBoardTasksQuery, BoardTaskCollection>(
+                        x.Send(
                             It.Is<SearchBoardTasksQuery>(
-                                y => y.BoardSlug == boardSlug && y.BoardColumnSlug == boardColumnSlug)), Times.Once);
+                                y => y.BoardSlug == boardSlug && y.BoardColumnSlug == boardColumnSlug),
+                            It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -308,8 +310,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 SetupController();
                 const string boardSlug = "board-name";
 
-                mockQueryDispatcher.Setup(
-                    x => x.HandleAsync<SearchBoardTasksQuery, BoardTaskCollection>(It.IsAny<SearchBoardTasksQuery>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<SearchBoardTasksQuery>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(new BoardTaskCollection());
 
                 // Act
@@ -360,10 +362,10 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 await controller.Put(boardSlug, taskId, boardTask);
 
                 // Assert
-                mockCommandDispatcher.Verify(
-                    x => x.HandleAsync<UpdateBoardTaskCommand, BoardTask>(It.Is<UpdateBoardTaskCommand>(
+                mockMediator.Verify(
+                    x => x.Send(It.Is<UpdateBoardTaskCommand>(
                         y => y.BoardSlug == boardSlug && y.BoardTask == boardTask
-                        )), Times.Once);
+                        ), It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -399,8 +401,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                     Name = "Updated Name"
                 };
 
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<UpdateBoardTaskCommand, BoardTask>(It.IsAny<UpdateBoardTaskCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<UpdateBoardTaskCommand>(), It.IsAny<CancellationToken>()))
                     .Throws<BoardTaskNotFoundException>();
 
                 // Act
@@ -423,8 +425,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                     Name = "Updated Name"
                 };
 
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<UpdateBoardTaskCommand, BoardTask>(It.IsAny<UpdateBoardTaskCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<UpdateBoardTaskCommand>(), It.IsAny<CancellationToken>()))
                     .Throws<BoardColumnNotFoundException>();
 
                 // Act
@@ -447,8 +449,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 const string boardSlug = "board-name";
                 const int taskId = 1;
 
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<DeleteBoardTaskCommand, int>(It.IsAny<DeleteBoardTaskCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<DeleteBoardTaskCommand>(), It.IsAny<CancellationToken>()))
                     .Throws<BoardNotFoundException>();
 
                 // Act
@@ -465,8 +467,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 SetupController();
                 const string boardSlug = "board-name";
                 const int taskId = 1;
-                mockCommandDispatcher.Setup(
-                    x => x.HandleAsync<DeleteBoardTaskCommand, int>(It.IsAny<DeleteBoardTaskCommand>()))
+                mockMediator.Setup(
+                    x => x.Send(It.IsAny<DeleteBoardTaskCommand>(), It.IsAny<CancellationToken>()))
                     .Throws<BoardTaskNotFoundException>();
 
                 // Act
@@ -503,8 +505,8 @@ namespace KanbanBoardApi.UnitTests.Controllers
                 await controller.Delete(boardSlug, taskId);
 
                 // Assert
-                mockCommandDispatcher.Verify(x => x.HandleAsync<DeleteBoardTaskCommand, int>(
-                    It.Is<DeleteBoardTaskCommand>(y => y.BoardSlug == boardSlug && y.BoardTaskId == taskId)), Times.Once);
+                mockMediator.Verify(x => x.Send(
+                    It.Is<DeleteBoardTaskCommand>(y => y.BoardSlug == boardSlug && y.BoardTaskId == taskId), It.IsAny<CancellationToken>()), Times.Once);
             }
         }
     }

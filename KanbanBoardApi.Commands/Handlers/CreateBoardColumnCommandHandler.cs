@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Commands.Services;
 using KanbanBoardApi.Domain;
@@ -6,10 +8,11 @@ using KanbanBoardApi.Dto;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.Mapping;
+using MediatR;
 
 namespace KanbanBoardApi.Commands.Handlers
 {
-    public class CreateBoardColumnCommandHandler : ICommandHandler<CreateBoardColumnCommand, BoardColumn>
+    public class CreateBoardColumnCommandHandler : IRequestHandler<CreateBoardColumnCommand, BoardColumn>
     {
         private readonly IDataContext dataContext;
         private readonly IMappingService mappingService;
@@ -23,17 +26,17 @@ namespace KanbanBoardApi.Commands.Handlers
             this.slugService = slugService;
         }
 
-        public async Task<BoardColumn> HandleAsync(CreateBoardColumnCommand command)
+        public async Task<BoardColumn> Handle(CreateBoardColumnCommand request, CancellationToken cancellationToken)
         {
-            var boardColumn = mappingService.Map<BoardColumnEntity>(command.BoardColumn);
+            var boardColumn = mappingService.Map<BoardColumnEntity>(request.BoardColumn);
             boardColumn.Slug = slugService.Slugify(boardColumn.Name);
 
-            if (dataContext.Set<BoardColumnEntity>().Any(x => x.Slug == boardColumn.Slug))
+            if (await dataContext.Set<BoardColumnEntity>().AnyAsync(x => x.Slug == boardColumn.Slug, cancellationToken))
             {
                 throw new CreateBoardColumnCommandSlugExistsException();
             }
 
-            var board = dataContext.Set<BoardEntity>().FirstOrDefault(x => x.Slug == command.BoardSlug);
+            var board = dataContext.Set<BoardEntity>().FirstOrDefault(x => x.Slug == request.BoardSlug);
             if (board == null)
             {
                 throw new BoardNotFoundException();

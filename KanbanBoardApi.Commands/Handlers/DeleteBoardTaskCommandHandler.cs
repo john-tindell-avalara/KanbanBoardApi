@@ -1,12 +1,14 @@
 ﻿using System.Data.Entity;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Exceptions;
+using MediatR;
 
 namespace KanbanBoardApi.Commands.Handlers
 {
-    public class DeleteBoardTaskCommandHandler : ICommandHandler<DeleteBoardTaskCommand, int>
+    public class DeleteBoardTaskCommandHandler : IRequestHandler<DeleteBoardTaskCommand, int>
     {
         private readonly IDataContext dataContext;
 
@@ -15,14 +17,15 @@ namespace KanbanBoardApi.Commands.Handlers
             this.dataContext = dataContext;
         }
 
-        public async Task<int> HandleAsync(DeleteBoardTaskCommand command)
+        public async Task<int> Handle(DeleteBoardTaskCommand request, CancellationToken cancellationToken)
         {
-            if (!await dataContext.Set<BoardEntity>().AnyAsync(x => x.Slug == command.BoardSlug))
+            if (!await dataContext.Set<BoardEntity>().AnyAsync(x => x.Slug == request.BoardSlug, cancellationToken))
             {
                 throw new BoardNotFoundException();
             }
 
-            var boardTaskEntity = await dataContext.Set<BoardTaskEntity>().FirstOrDefaultAsync(x => x.Id == command.BoardTaskId);
+            var boardTaskEntity = await dataContext.Set<BoardTaskEntity>()
+                .FirstOrDefaultAsync(x => x.Id == request.BoardTaskId, cancellationToken);
 
             if (boardTaskEntity == null)
             {
@@ -32,7 +35,7 @@ namespace KanbanBoardApi.Commands.Handlers
             dataContext.Delete(boardTaskEntity);
             await dataContext.SaveChangesAsync();
 
-            return command.BoardTaskId;
+            return request.BoardTaskId;
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using KanbanBoardApi.Dto;
+using MediatR;
 
 namespace KanbanBoardApi.Commands
 {
-    public class UpdateBoardColumnCommand : ICommand
+    public class UpdateBoardColumnCommand : IRequest<BoardColumn>
     {
         public string BoardSlug { get; set; }
 

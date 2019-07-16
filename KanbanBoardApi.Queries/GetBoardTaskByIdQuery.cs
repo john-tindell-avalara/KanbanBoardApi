@@ -1,6 +1,9 @@
-﻿namespace KanbanBoardApi.Queries
+﻿using KanbanBoardApi.Dto;
+using MediatR;
+
+namespace KanbanBoardApi.Queries
 {
-    public class GetBoardTaskByIdQuery : IQuery
+    public class GetBoardTaskByIdQuery : IRequest<BoardTask>
     {
         public string BoardSlug { get; set; }
 

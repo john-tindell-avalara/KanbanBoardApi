@@ -1,6 +1,9 @@
-﻿namespace KanbanBoardApi.Queries
+﻿using KanbanBoardApi.Dto;
+using MediatR;
+
+namespace KanbanBoardApi.Queries
 {
-    public class GetBoardColumnBySlugQuery : IQuery
+    public class GetBoardColumnBySlugQuery : IRequest<BoardColumn>
     {
         public string BoardSlug { get; set; }
 

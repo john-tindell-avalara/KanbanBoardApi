@@ -1,14 +1,16 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Mapping;
+using MediatR;
 
 namespace KanbanBoardApi.Queries.Handlers
 {
-    public class GetBoardColumnBySlugQueryHandler : IQueryHandler<GetBoardColumnBySlugQuery, BoardColumn>
+    public class GetBoardColumnBySlugQueryHandler : IRequestHandler<GetBoardColumnBySlugQuery, BoardColumn>
     {
         private readonly IDataContext dataContext;
         private readonly IMappingService mappingService;
@@ -19,13 +21,13 @@ namespace KanbanBoardApi.Queries.Handlers
             this.mappingService = mappingService;
         }
 
-        public async Task<BoardColumn> HandleAsync(GetBoardColumnBySlugQuery query)
+        public async Task<BoardColumn> Handle(GetBoardColumnBySlugQuery request, CancellationToken cancellationToken)
         {
             var boardColumn =
                 await dataContext.Set<BoardEntity>()
-                    .Where(x => x.Slug == query.BoardSlug)
-                    .Select(x => x.Columns.FirstOrDefault(y => y.Slug == query.BoardColumnSlug))
-                    .FirstOrDefaultAsync();
+                    .Where(x => x.Slug == request.BoardSlug)
+                    .Select(x => x.Columns.FirstOrDefault(y => y.Slug == request.BoardColumnSlug))
+                    .FirstOrDefaultAsync(cancellationToken);
 
             if (boardColumn == null)
             {

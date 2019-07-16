@@ -1,6 +1,9 @@
-﻿namespace KanbanBoardApi.Commands
+﻿using KanbanBoardApi.Dto;
+using MediatR;
+
+namespace KanbanBoardApi.Commands
 {
-    public class DeleteBoardColumnCommand : ICommand
+    public class DeleteBoardColumnCommand : IRequest<string>
     {
         public string BoardSlug { get; set; }
 

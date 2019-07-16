@@ -1,13 +1,15 @@
 ﻿using System.Data.Entity;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Mapping;
+using MediatR;
 
 namespace KanbanBoardApi.Queries.Handlers
 {
-    public class GetBoardBySlugQueryHandler : IQueryHandler<GetBoardBySlugQuery, Board>
+    public class GetBoardBySlugQueryHandler : IRequestHandler<GetBoardBySlugQuery, Board>
     {
         private readonly IDataContext dataContext;
         private readonly IMappingService mappingService;
@@ -18,9 +20,9 @@ namespace KanbanBoardApi.Queries.Handlers
             this.mappingService = mappingService;
         }
 
-        public async Task<Board> HandleAsync(GetBoardBySlugQuery query)
+        public async Task<Board> Handle(GetBoardBySlugQuery request, CancellationToken cancellationToken)
         {
-            var board = await dataContext.Set<BoardEntity>().FirstOrDefaultAsync(x => x.Slug == query.BoardSlug);
+            var board = await dataContext.Set<BoardEntity>().FirstOrDefaultAsync(x => x.Slug == request.BoardSlug, cancellationToken);
 
             if (board == null)
             {

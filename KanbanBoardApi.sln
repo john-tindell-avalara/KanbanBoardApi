@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanBoardApi", "KanbanBoardApi\KanbanBoardApi.csproj", "{5997EE84-15ED-420F-B793-CD3A74DEF4EC}"
 EndProject
@@ -30,6 +30,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanBoardApi.Exceptions", "KanbanBoardApi.Exceptions\KanbanBoardApi.Exceptions.csproj", "{238A4A72-29FF-4A4B-84C8-41BE8FA04F50}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanBoardApi.Validation", "KanbanBoardApi.Validation\KanbanBoardApi.Validation.csproj", "{9F0A78BB-F0E7-4D02-8F54-9B2A31367940}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8B61076C-9889-4F8E-B9AC-BEC2E1E3D2F2}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,5 +103,8 @@ Global
 		{8566C7EB-6F00-43A8-A934-ADD8EF2ACC85} = {F9D47B70-A9A4-4FE1-853C-98FF24B2E53E}
 		{7BBFCBC1-A4C2-4926-99F6-0D1AE9084F5A} = {F9D47B70-A9A4-4FE1-853C-98FF24B2E53E}
 		{190D2440-5C87-492F-B90A-175F5F2941A5} = {F9D47B70-A9A4-4FE1-853C-98FF24B2E53E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B944FF8B-EF6A-454B-842E-0EB81F8E568F}
 	EndGlobalSection
 EndGlobal

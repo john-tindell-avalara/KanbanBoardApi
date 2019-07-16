@@ -1,14 +1,16 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Mapping;
+using MediatR;
 
 namespace KanbanBoardApi.Queries.Handlers
 {
-    public class SearchBoardsQueryHandler : IQueryHandler<SearchBoardsQuery, BoardCollection>
+    public class SearchBoardsQueryHandler : IRequestHandler<SearchBoardsQuery, BoardCollection>
     {
         private readonly IDataContext dataContext;
         private readonly IMappingService mappingService;
@@ -19,9 +21,9 @@ namespace KanbanBoardApi.Queries.Handlers
             this.mappingService = mappingService;
         }
 
-        public async Task<BoardCollection> HandleAsync(SearchBoardsQuery query)
+        public async Task<BoardCollection> Handle(SearchBoardsQuery request, CancellationToken cancellationToken)
         {
-            var boards = await dataContext.Set<BoardEntity>().ToListAsync();
+            var boards = await dataContext.Set<BoardEntity>().ToListAsync(cancellationToken);
 
             return new BoardCollection
             {

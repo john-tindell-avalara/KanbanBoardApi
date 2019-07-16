@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FakeDbSet;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
@@ -46,7 +47,7 @@ namespace KanbanBoardApi.Queries.UnitTests.Handlers
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<BoardNotFoundException>(() => handler.HandleAsync(query));
+            await Assert.ThrowsAsync<BoardNotFoundException>(() => handler.Handle(query, CancellationToken.None));
         }
 
         [Fact]
@@ -72,7 +73,7 @@ namespace KanbanBoardApi.Queries.UnitTests.Handlers
             };
 
             // Act
-            var boardColumnCollection = await handler.HandleAsync(query);
+            var boardColumnCollection = await handler.Handle(query, CancellationToken.None);
 
             // Assert
             Assert.NotNull(boardColumnCollection);
@@ -101,7 +102,7 @@ namespace KanbanBoardApi.Queries.UnitTests.Handlers
             };
 
             // Act
-            await handler.HandleAsync(query);
+            await handler.Handle(query, CancellationToken.None);
 
             // Assert
             mockMappingService.Verify(x => x.Map<BoardColumn>(It.IsAny<BoardColumnEntity>()), Times.Once);

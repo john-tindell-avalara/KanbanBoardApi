@@ -1,10 +1,11 @@
 ﻿
 using System.Web.Http.OData;
 using KanbanBoardApi.Dto;
+using MediatR;
 
 namespace KanbanBoardApi.Commands
 {
-    public class PatchBoardTaskCommand : ICommand
+    public class PatchBoardTaskCommand : IRequest<BoardTask>
     {
         public string BoardSlug { get; set; }
 

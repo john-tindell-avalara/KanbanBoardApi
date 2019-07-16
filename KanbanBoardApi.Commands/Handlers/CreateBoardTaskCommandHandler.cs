@@ -1,15 +1,17 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using KanbanBoardApi.Domain;
 using KanbanBoardApi.Dto;
 using KanbanBoardApi.EntityFramework;
 using KanbanBoardApi.Exceptions;
 using KanbanBoardApi.Mapping;
+using MediatR;
 
 namespace KanbanBoardApi.Commands.Handlers
 {
-    public class CreateBoardTaskCommandHandler : ICommandHandler<CreateBoardTaskCommand, BoardTask>
+    public class CreateBoardTaskCommandHandler : IRequestHandler<CreateBoardTaskCommand, BoardTask>
     {
         private IDataContext dataContext;
         private IMappingService mappingService;
@@ -20,20 +22,20 @@ namespace KanbanBoardApi.Commands.Handlers
             this.mappingService = mappingService;
         }
 
-        public async Task<BoardTask> HandleAsync(CreateBoardTaskCommand command)
+        public async Task<BoardTask> Handle(CreateBoardTaskCommand request, CancellationToken cancellationToken)
         {
-            var boardTask = mappingService.Map<BoardTaskEntity>(command.BoardTask);
+            var boardTask = mappingService.Map<BoardTaskEntity>(request.BoardTask);
 
-            if (!await dataContext.Set<BoardEntity>().AnyAsync(x => x.Slug == command.BoardSlug))
+            if (!await dataContext.Set<BoardEntity>().AnyAsync(x => x.Slug == request.BoardSlug, cancellationToken))
             {
                 throw new BoardNotFoundException();
             }
 
             var boardColumn =
                 await dataContext.Set<BoardEntity>()
-                    .Where(x => x.Slug == command.BoardSlug)
-                    .Select(x => x.Columns.FirstOrDefault(y => y.Slug == command.BoardTask.BoardColumnSlug))
-                    .FirstOrDefaultAsync();
+                    .Where(x => x.Slug == request.BoardSlug)
+                    .Select(x => x.Columns.FirstOrDefault(y => y.Slug == request.BoardTask.BoardColumnSlug))
+                    .FirstOrDefaultAsync(cancellationToken);
 
             if (boardColumn == null)
             {
